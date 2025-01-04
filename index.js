@@ -9,10 +9,10 @@ import cfonts from 'cfonts'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const require = createRequire(__dirname)
 
-cfonts.say('Ai\nHoshino', {
+cfonts.say('Hatsune\nMiku', {
   font: 'chrome',
   align: 'center',
-  gradient: ['red', 'magenta']
+  gradient: ['cyan', 'cyan']
 })
 
 cfonts.say(`WhatsApp Bot Multi Device`, {
