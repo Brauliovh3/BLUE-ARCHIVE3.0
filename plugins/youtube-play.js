@@ -1,114 +1,86 @@
+import { youtubedl, youtubedlv2 } from '@bochilteam/scraper'
 import fetch from 'node-fetch'
 import yts from 'yt-search'
+import ytdl from 'ytdl-core'
+import axios from 'axios'
 
-let handler = async (m, { conn: star, command, args, text, usedPrefix }) => {
-  if (!text) return m.reply('[ 💙 ] Ingresa el título de un video o canción de *YouTube*.\n\n`Ejemplo:`\n' + `> *${usedPrefix + command}* Medicine - teto`)
-    await m.react('🕓')
+const LimitAud = 725 * 1024 * 1024 // 700MB
+const LimitVid = 425 * 1024 * 1024 // 425MB
+
+const handler = async (m, { conn, command, args, text, usedPrefix }) => {
+    if (!text) return conn.reply(m.chat, `Por favor, ingresa el nombre o enlace del video de YouTube que deseas buscar.\n*${usedPrefix + command} Billie Eilish - Bellyache*`, m)
+    
+    const tipoDescarga = command === 'play' ? 'audio' : command === 'play2' ? 'video' : command === 'play3' ? 'audio doc' : command === 'play4' ? 'video doc' : '';
+    const yt_play = await search(args.join(' '))
+    const ytplay2 = await yts(text)
+
+    const texto1 = `⌘━─━─≪ *YOUTUBE* ≫─━─━⌘
+★ Título: ${yt_play[0].title}
+★ Fecha de publicación: ${yt_play[0].ago}
+★ Duración: ${secondString(yt_play[0].duration.seconds)}
+★ Vistas: ${MilesNumber(yt_play[0].views)}
+★ Autor: ${yt_play[0].author.name}
+★ Enlace: ${yt_play[0].url.replace(/^https?:\/\//, '')}
+⌘━━─≪ ${command} ≫─━━⌘
+
+> _*Descargando ${tipoDescarga}.... Aguarde un momento por favor*_`.trim()
+
+    await conn.sendFile(m.chat, yt_play[0].thumbnail, 'error.jpg', texto1, m)
+
+   // Audio download
+if (command == 'play' || command == 'audio') {
+    try {    
+        let searchh = await yts(yt_play[0].url);
+        let __res = searchh.all.map(v => v).filter(v => v.type == "video");
+        let infoo = await ytdl.getInfo('https://youtu.be/' + __res[0].videoId);
+        let ress = await ytdl.chooseFormat(infoo.formats, { filter: 'audioonly' });
+        await conn.sendMessage(m.chat, { audio: { url: ress.url }, mimetype: 'audio/mpeg' }, { quoted: m });
+    } catch (e1) {
+        try {    
+            const res = await fetch(`https://api.zenkey.my.id/api/download/ytmp3?apikey=zenkey&url=${yt_play[0].url}`);
+            let { result } = await res.json();
+            await conn.sendMessage(m.chat, { audio: { url: await result.download.url }, mimetype: 'audio/mpeg' }, { quoted: m });
+        } catch (e1) {
+            console.error("Error al descargar el audio", e1);
+        }
+    }
+}
+
+// Video download
+if (command == 'play2' || command == 'video') {
+    try {    
+        let searchh = await yts(yt_play[0].url);
+        let __res = searchh.all.map(v => v).filter(v => v.type == "video");
+        let infoo = await ytdl.getInfo('https://youtu.be/' + __res[0].videoId);
+        let ress = await ytdl.chooseFormat(infoo.formats, { filter: 'videoonly' });
+        await conn.sendMessage(m.chat, { video: { url: await ress.url }, fileName: `${yt_play[0].title}.mp4`, mimetype: 'video/mp4', caption: `⟡ *${yt_play[0].title}*\n> ${wm}` }, { quoted: m });
+    } catch (e1) {
+        console.error("Error al descargar el video", e1);
+    }
+}
+
+// Document download for audio
+if (command == 'play3' || command == 'playdoc') {
+    try {    
+        let searchh = await yts(yt_play[0].url);
+        let __res = searchh.all.map(v => v).filter(v => v.type == "video");
+        let infoo = await ytdl.getInfo('https://youtu.be/' + __res[0].videoId);
+        let ress = await ytdl.chooseFormat(infoo.formats, { filter: 'audioonly' });
+        await conn.sendMessage(m.chat, { document: { url: ress.url }, mimetype: 'audio/mpeg', fileName: `${yt_play[0].title}.mp3` }, { quoted: m });
+    } catch (e1) {
+        console.error("Error al descargar el audio como documento", e1);
+    }
+}
+
+// Video document download
+if (command == 'play4' || command == 'playdoc2') {
     try {
-    let res = await search(args.join(" "))
-    let img = await (await fetch(`${res[0].image}`)).buffer()
-    let txt = '`🌱乂  Y O U T U B E  -  P L A Y🌱`\n\n'
-       txt += `\t\t*» Título* : ${res[0].title}\n`
-       txt += `\t\t*» Duración* : ${secondString(res[0].duration.seconds)}\n`
-       txt += `\t\t*» Publicado* : ${eYear(res[0].ago)}\n`
-       txt += `\t\t*» Canal* : ${res[0].author.name || 'Desconocido'}\n`
-       txt += `\t\t*» ID* : ${res[0].videoId}\n`
-       txt += `\t\t*» Url* : ${'https://youtu.be/' + res[0].videoId}\n\n`
-       txt += `> *-* Para descargar responde a este mensaje con *Video* o *Audio*.`
-await star.sendFile(m.chat, img, 'thumbnail.jpg', txt, m)
-await m.react('✅')
-} catch {
-await m.react('✖️')
-}}
-handler.help = ['play *<búsqueda>*']
-handler.tags = ['downloader']
-handler.command = ['play']
-handler.register = true 
-export default handler
-
-async function search(query, options = {}) {
-  let search = await yts.search({ query, hl: "es", gl: "ES", ...options })
-  return search.videos
-}
-
-function MilesNumber(number) {
-  let exp = /(\d)(?=(\d{3})+(?!\d))/g
-  let rep = "$1."
-  let arr = number.toString().split(".")
-  arr[0] = arr[0].replace(exp, rep)
-  return arr[1] ? arr.join(".") : arr[0]
-}
-
-function secondString(seconds) {
-  seconds = Number(seconds);
-  const d = Math.floor(seconds / (3600 * 24));
-  const h = Math.floor((seconds % (3600 * 24)) / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = Math.floor(seconds % 60);
-  const dDisplay = d > 0 ? d + (d == 1 ? ' Día, ' : ' Días, ') : '';
-  const hDisplay = h > 0 ? h + (h == 1 ? ' Hora, ' : ' Horas, ') : '';
-  const mDisplay = m > 0 ? m + (m == 1 ? ' Minuto, ' : ' Minutos, ') : '';
-  const sDisplay = s > 0 ? s + (s == 1 ? ' Segundo' : ' Segundos') : '';
-  return dDisplay + hDisplay + mDisplay + sDisplay;
-}
-
-function sNum(num) {
-    return new Intl.NumberFormat('en-GB', { notation: "compact", compactDisplay: "short" }).format(num)
-}
-
-function eYear(txt) {
-    if (!txt) {
-        return '×'
+        let searchh = await yts(yt_play[0].url);
+        let __res = searchh.all.map(v => v).filter(v => v.type == "video");
+        let infoo = await ytdl.getInfo('https://youtu.be/' + __res[0].videoId);
+        let ress = await ytdl.chooseFormat(infoo.formats, { filter: 'videoonly' });
+        await conn.sendMessage(m.chat, { document: { url: ress.url }, fileName: `${yt_play[0].title}.mp4`, caption: `╭━❰  ${wm}  ❱━⬣\n┃ 💜 Título: ${yt_play[0].title}\n╰━━━━━❰ *𓃠 ${vs}* ❱━━━━⬣`, thumbnail: yt_play[0].thumbnail, mimetype: 'video/mp4' }, { quoted: m });
+    } catch (e1) {
+        console.error("Error al descargar el video como documento", e1);
     }
-    if (txt.includes('month ago')) {
-        var T = txt.replace("month ago", "").trim()
-        var L = 'hace '  + T + ' mes'
-        return L
-    }
-    if (txt.includes('months ago')) {
-        var T = txt.replace("months ago", "").trim()
-        var L = 'hace ' + T + ' meses'
-        return L
-    }
-    if (txt.includes('year ago')) {
-        var T = txt.replace("year ago", "").trim()
-        var L = 'hace ' + T + ' año'
-        return L
-    }
-    if (txt.includes('years ago')) {
-        var T = txt.replace("years ago", "").trim()
-        var L = 'hace ' + T + ' años'
-        return L
-    }
-    if (txt.includes('hour ago')) {
-        var T = txt.replace("hour ago", "").trim()
-        var L = 'hace ' + T + ' hora'
-        return L
-    }
-    if (txt.includes('hours ago')) {
-        var T = txt.replace("hours ago", "").trim()
-        var L = 'hace ' + T + ' horas'
-        return L
-    }
-    if (txt.includes('minute ago')) {
-        var T = txt.replace("minute ago", "").trim()
-        var L = 'hace ' + T + ' minuto'
-        return L
-    }
-    if (txt.includes('minutes ago')) {
-        var T = txt.replace("minutes ago", "").trim()
-        var L = 'hace ' + T + ' minutos'
-        return L
-    }
-    if (txt.includes('day ago')) {
-        var T = txt.replace("day ago", "").trim()
-        var L = 'hace ' + T + ' dia'
-        return L
-    }
-    if (txt.includes('days ago')) {
-        var T = txt.replace("days ago", "").trim()
-        var L = 'hace ' + T + ' dias'
-        return L
-    }
-    return txt
 }
