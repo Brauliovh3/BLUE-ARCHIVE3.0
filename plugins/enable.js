@@ -67,6 +67,16 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
          }}
        chat.onlyLatinos = isEnable  
        break
+          
+          case 'antilink2':
+  if (m.isGroup) {
+    if (!(isAdmin || isOwner)) {
+      global.dfail('admin', m, conn)
+      throw false
+    }
+  }
+  chat.antiLink2 = isEnable
+  break
     default:
       if (!/[01]/.test(command)) return m.reply(`
 *💙 Ingresa una opción para habilitar o deshabilitar*
