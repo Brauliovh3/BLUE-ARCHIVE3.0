@@ -13,7 +13,6 @@ let tags = {
   'sticker': 'STICKER',
   'img': 'IMAGE',
   'group': 'GROUPS',
-//  'logo': 'MAKER',
   'nable': 'ON / OFF', 
   'premium': 'PREMIUM',
   'downloader': 'DOWNLOAD',
@@ -30,7 +29,7 @@ const defaultMenu = {
   before: `
 *─ׄ─ׅ─ׄ─💙─ׄ─ׅ─ׄ─💙─ׄ─ׅ─ׄ─💙─ׄ─ׅ─ׄ─💙─ׄ─ׅ─ׄ─*
 
-“ Hola *%name* soy *Hatsune Miku*, %greeting ”
+" Hola *%name* soy *Hatsune Miku*, %greeting "
  💙🌱██▓▒­░⡷⠂𝙷𝚊𝚝𝚜𝚞𝚗𝚎⠐⢾░▒▓██🌱💙
      💙🌱꧁ღ💙🅼🅸🅺🆄💙ღ꧂🌱💙
 ╭────═[ *I N F O  -  B O T* ]═─────⋆
@@ -179,9 +178,13 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname }) => {
     let pp15 = 'https://tinyurl.com/27qhgeaa'
     let img = await (await fetch(`https://i.ibb.co/8NBHFtN/file.jpg`)).buffer()
     await m.react('💙')
-   // await conn.sendMessage(m.chat, { video: { url: [pp, pp2, pp3, pp4, pp5, pp6, pp7, pp8, pp9, pp10, pp11, pp12, pp13, pp14, pp15].getRandom() }, gifPlayback: true, caption: text.trim(), mentions: [m.sender] }, { quoted: estilo })
-    await conn.sendFile(m.chat, pp, 'thumbnail.jpg', text.trim(), m, null, rcanal)
-   //await conn.sendAi(m.chat, botname, textbot, text.trim(), img, img, canal, estilo)
+    
+    await conn.sendMessage(m.chat, {
+      video: { url: [pp, pp2, pp3, pp4, pp5, pp6, pp7, pp8, pp9, pp10, pp11, pp12, pp13, pp14, pp15].getRandom() },
+      gifPlayback: true,
+      caption: text.trim(),
+      mentions: [m.sender]
+    }, { quoted: m })
 
   } catch (e) {
     conn.reply(m.chat, '❎ Lo sentimos, el menú tiene un error.', m)
@@ -195,7 +198,6 @@ handler.command = ['menu', 'help', 'menú']
 handler.register = true 
 export default handler
 
-
 const more = String.fromCharCode(8206)
 const readMore = more.repeat(4001)
 
@@ -206,8 +208,8 @@ function clockString(ms) {
   return [h, m, s].map(v => v.toString().padStart(2, 0)).join(':')
 }
 
-  var ase = new Date();
-  var hour = ase.getHours();
+var ase = new Date();
+var hour = ase.getHours();
 switch(hour){
   case 0: hour = 'una linda noche 🌙'; break;
   case 1: hour = 'una linda noche 💤'; break;
@@ -234,4 +236,4 @@ switch(hour){
   case 22: hour = 'una linda noche 🌙'; break;
   case 23: hour = 'una linda noche 🌃'; break;
 }
-  var greeting = "espero que tengas " + hour;
+var greeting = "espero que tengas " + hour;
