@@ -94,7 +94,7 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
 *Tipo :* antilink 
 *Descripción :* Des/Activa el *AntiLink* para Grupos
 
-*Tipo :* antilinks 
+*Tipo :* antilink2 
 *Descripción :* Des/Activa el *AntiLinks* para Grupos
 
 *Tipo :* autoread 
