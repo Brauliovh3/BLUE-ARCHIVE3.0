@@ -24,18 +24,19 @@ export async function before(m, { isAdmin, isBotAdmin }) {
         delete: { remoteJid: m.chat, fromMe: false, id: m.key.id, participant: m.key.participant },
       });
 
+      // Enviar mensaje de expulsión sin reenviar el enlace
       await this.sendMessage(
         m.chat,
         {
-          text: `*「 ANTI LINKS 」*\nEnlace detectado y eliminado.\n${user}, está prohibido enviar enlaces.`,
+          text: `*「 ANTI LINKS 」*\n${user}, está prohibido enviar enlaces. Has sido expulsado del grupo.`,
           mentions: [m.sender],
-        },
-        { quoted: m }
+        }
       );
 
+      // Expulsar al usuario inmediatamente
       await this.groupParticipantsUpdate(m.chat, [m.sender], 'remove'); // Expulsar al usuario.
     } else {
-      return m.reply('🚫 El bot no tiene permisos de administrador para ejecutar esta acción.');
+      return m.reply('💙 El bot no tiene permisos de administrador para ejecutar esta acción.');
     }
   }
 
