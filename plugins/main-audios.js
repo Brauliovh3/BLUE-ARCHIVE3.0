@@ -19,7 +19,7 @@ let handler = async (m, { conn }) => {
       'invocar': './media/Invocar.mp3',
       'hentai': './media/hentai.mp3',
       'nose': './media/maau1.mp3',
-      'lala': './media/lala.mp3',
+      'canal': './media/canal.mp3',
       'dios': './media/dios.mp3',
       'sad': './media/sad.mp3',
       'risa': './media/jaja.mp3',
@@ -56,7 +56,7 @@ handler.help = [
 ];
 
 // Prefijos y comandos, corregido el prefijo personalizado
-handler.customPrefix = /^(miku|mine|baneado|ayuda|gey|ara|bañate|bot|buenos días|felíz cumpleaños|invocar|hentai|nose|lala|dios|sad|risa|motivar|calculadora|tengo novia)$/i;
+handler.customPrefix = /^(miku|mine|baneado|ayuda|gey|ara|bañate|bot|buenos días|felíz cumpleaños|invocar|hentai|nose|canal|dios|sad|risa|motivar|calculadora|tengo novia)$/i;
 handler.command = new RegExp;
 handler.tags = ['Audios Miku'];
 
