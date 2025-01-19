@@ -23,11 +23,11 @@ let handler = async (m, { conn, text }) => {
     await m.reply(`*${-poin}* 🌱 Cebollines 
 Impuesto 2% : *${-imt}* 🌱 Cebollines
 Total gastado: *${-limit}* 🌱 Cebollines`)
-    conn.fakeReply(m.chat, `*+${poin}* *🌱 Estrellas.*`, who, m.text)
+    conn.fakeReply(m.chat, `*+${poin}* *🌱 Cebollines.*`, who, m.text)
 }
-handler.help = ['darstars *@user <cantidad>*']
+handler.help = ['darcebollines *@user <cantidad>*']
 handler.tags = ['rpg']
-handler.command = ['darcoins', 'darstars']
+handler.command = ['darcoins', 'darcebollines']
 handler.register = true 
 
 export default handler
