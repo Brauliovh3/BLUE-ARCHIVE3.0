@@ -67,7 +67,15 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
          }}
        chat.onlyLatinos = isEnable  
        break
-          
+                case 'antiperuanos':
+  if (m.isGroup) {
+    if (!(isAdmin || isOwner)) {
+      global.dfail('admin', m, conn)
+      throw false
+    }
+  }
+  chat.onlyLatinos = isEnable
+  break
           case 'antilink2':
   if (m.isGroup) {
     if (!(isAdmin || isOwner)) {
@@ -90,6 +98,9 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
 
 *Tipo :* antiarabes 
 *Descripción :* Des/Activa el *AntiArabes* para Grupos
+
+*Tipo :* antiperuanos 
+*Descripción :* Des/Activa el *Antiperuanos* para Grupos
 
 *Tipo :* antilink 
 *Descripción :* Des/Activa el *AntiLink* para Grupos
