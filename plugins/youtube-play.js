@@ -1,55 +1,71 @@
-import fetch from "node-fetch";
-import yts from "yt-search";
+import fetch from 'node-fetch';
 
-let handler = async (m, { conn, text }) => {
-if (!text) {
-return m.reply("💙 Ingresa el texto de lo que quieres buscar")
-}
+let handler = async (m, { conn, command, text, usedPrefix }) => {
+  if (!text) {
+    return conn.reply(
+      m.chat,
+      '💙 Ingresa el nombre de la canción que quieras buscar.',
+      m
+    );
+  }
 
-let ytres = await yts(text)
-let video = ytres.videos[0]
-  
-if (!video) {
-return m.reply("💙 Video no encontrado")
-}
+  try {
+    // Llamada a la API
+    const api = await fetch(`https://api.vreden.web.id/api/ytplaymp3?query=${encodeURIComponent(text)}`);
+    if (!api.ok) throw new Error(`Error HTTP! estado: ${api.status}`);
+    
+    const json = await api.json();
+    console.log(json); // Para depuración
 
-let { title, thumbnail, timestamp, views, ago, url } = video
+    if (!json.result || !json.result.metadata) {
+      throw new Error('La API no devolvió datos válidos.');
+    }
 
-let vistas = parseInt(views).toLocaleString("es-ES") + " vistas"
+    // Extraer datos
+    const { title, thumbnail, timestamp, ago, views, author } = json.result.metadata;
+    let downloadUrl = json.result.download.url;
 
-let HS = ` 💙🅗🅐🅣🅢🅤🅝🅔 🅜🅘🅚🅤💙
-💙★웃웃유유유♫♫Ɖ♪♪유유유웃웃★💙
-💙⏤͟͟͞͞Duración: ${timestamp}
-💙⏤͟͟͞͞Vistas: ${vistas}
-💙⏤͟͟͞͞Subido: ${ago}
-💙⏤͟͟͞͞Enlace: ${url}
-💙★웃웃유유유♫♫Ɖ♪♪유유유웃웃★💙
+    // Verificar si la URL es relativa y convertirla a absoluta si es necesario
+    if (!/^https?:\/\//i.test(downloadUrl)) {
+      downloadUrl = `https://api.vreden.web.id${downloadUrl}`;
+    }
 
-💙 𝙀𝙨𝙥𝙚𝙧𝙚 𝙙𝙚𝙨𝙘𝙖𝙧𝙜𝙖𝙣𝙙𝙤 𝙨𝙪 𝙖𝙪𝙙𝙞𝙤  💙`
+    console.log('Enlace de descarga:', downloadUrl); // Para verificar el enlace
 
-let thumb = (await conn.getFile(thumbnail))?.data;
+    const HS = `
+💙 *Información de la canción:*
+- 🎵 *Título:* ${title}
+- ⏱️ *Duración:* ${timestamp}
+- 📅 *Subido hace:* ${ago}
+- 👀 *Visitas:* ${views}
+- ✍️ *Autor:* ${author.name}
+`.trim();
 
-let JT = {
-contextInfo: {
-externalAdReply: {
-title: title, body: "",
-mediaType: 1, previewType: 0,
-mediaUrl: url, sourceUrl: url,
-thumbnail: thumb, renderLargerThumbnail: true,
-}}}
+    // Enviar la información y la imagen
+    await conn.sendFile(m.chat, thumbnail, 'song-thumbnail.jpg', HS, m);
 
-await conn.reply(m.chat, HS, m, JT)
+    // Descargar el archivo manualmente y enviarlo
+    const res = await fetch(downloadUrl);
+    if (!res.ok) throw new Error(`Error al descargar el archivo: ${res.statusText}`);
 
-try {
-let api = await fetch(`https://api.vreden.web.id/api/ytplaymp3?query=${url}`);
-let json = await api.json()
-let { download } = json.result
+    const buffer = await res.buffer(); // Obtener los datos del archivo como buffer
+    if (buffer.length === 0) throw new Error('El archivo descargado está vacío.');
 
-await conn.sendMessage(m.chat, { audio: { url: download.url }, caption: ``, mimetype: "audio/mpeg", }, { quoted: m })
-} catch (error) {
-console.error(error)    
-}}
+    await conn.sendFile(
+      m.chat,
+      buffer,
+      `${title}.mp3`,
+      null,
+      m,
+      null,
+      { mimetype: 'audio/mpeg' } // Forzar el tipo MIME como MP3
+    );
+  } catch (error) {
+    console.error(error);
+    conn.reply(m.chat, '⚠️ Hubo un error al procesar tu solicitud. Por favor, intenta nuevamente más tarde.', m);
+  }
+};
 
-handler.command = /^(play)$/i
+handler.command = /^(play)$/i;
 
-export default handler
+export default handler;
