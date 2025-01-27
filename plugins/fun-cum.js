@@ -7,6 +7,7 @@ let pp3 = 'https://files.catbox.moe/qzsed0.mp4'
 let pp4 = 'https://files.catbox.moe/4x2i8x.mp4'
 let pp5 = 'https://files.catbox.moe/i02zhp.mp4'
 let who
+if (!global.db.data.chats[m.chat].nsfw) return conn.reply(m.chat, `💙 El grupo no admite contenido *Nsfw.*\n\n> Para activarlo un *Administrador* debe usar el comando */on nfsw*`, m, rcanal)
 if (m.isGroup) who = m.mentionedJid[0]
 else who = m.chat
 if (!who) return conn.reply(m.chat, '💙 Menciona al usuario con *@user*', m, rcanal)
