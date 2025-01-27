@@ -37,7 +37,7 @@ ${paypal}
     });
 }
 
-handler.help = ['donar'];
+handler.help = ['donar,dono,dar'];
 handler.tags = ['mantenimiento'];
 handler.command = ['donar', 'apoyar', 'PayPal'];
 
