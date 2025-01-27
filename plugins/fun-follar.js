@@ -2,6 +2,7 @@ let handler = async (m, { conn, usedPrefix, command}) => {
     let pp = 'https://tinyurl.com/28b8j9m7'
     let pp2 = 'https://tinyurl.com/263szwef'
     let who
+    if (!global.db.data.chats[m.chat].nsfw) return conn.reply(m.chat, `💙 El grupo no admite contenido *Nsfw.*\n\n> Para activarlo un *Administrador* debe usar el comando */on nfsw*`, m, rcanal)
     if (m.isGroup) who = m.mentionedJid[0]
     else who = m.chat
     if (!who) return conn.reply(m.chat, '💙 Menciona al usuario con *@user*', m, rcanal)
