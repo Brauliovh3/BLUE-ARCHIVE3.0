@@ -17,7 +17,7 @@ let handler = async (m, { conn }) => {
   }
 };
 
-handler.help = ['gei,gey,gay *@user*'];
+handler.help = ['gay *@user*'];
 handler.tags = ['fun'];
 handler.command = /^(gay)$/i;
 
