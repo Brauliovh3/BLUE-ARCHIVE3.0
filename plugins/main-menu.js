@@ -48,21 +48,27 @@ const defaultMenu = {
 const handler = async (m, { conn, usedPrefix: _p, __dirname }) => {
   try {
     // Initialize user data with safe defaults
-    const userData = global.db.data.users[m.sender] || {}
+    const userData = global.db?.data?.users?.[m.sender] || {}
     const { exp = 0, limit = 0, level = 0 } = userData
     
     // Get XP range
     const { min, xp, max } = xpRange(level, global.multiplier)
     
     // Get user name safely
-    let name = await conn.getName(m.sender).catch(() => m.sender.split('@')[0])
+    let name = ''
+    try {
+      name = await conn.getName(m.sender)
+    } catch (error) {
+      name = m.sender.split('@')[0]
+      console.error('Error getting name:', error)
+    }
     
     // Calculate uptime
     const uptime = process.uptime() * 1000
     const muptime = clockString(uptime)
     
     // Get total registered users safely
-    const totalreg = Object.keys(global.db.data.users || {}).length
+    const totalreg = Object.keys(global.db?.data?.users || {}).length
     
     // Get plugins safely
     const plugins = Object.values(global.plugins || {}).filter(p => !p.disabled)
@@ -102,20 +108,27 @@ const handler = async (m, { conn, usedPrefix: _p, __dirname }) => {
     })[name])
 
     // Add reaction
-    await m.react('💙')
+    if (typeof m.react === 'function') {
+      await m.react('💙').catch(console.error)
+    }
 
-    // Try to send with video first
+    // Try to send message with media
     try {
-      await conn.sendMessage(m.chat, {
-        video: { url: 'https://media.tenor.com/TPVTyFQoYqcAAAAC/hatsune-miku.mp4' },
-        gifPlayback: true,
+      // Using a more reliable media URL or local asset
+      const mediaOptions = {
+        // You can try different media options:
+        image: { url: 'https://telegra.ph/file/5e7042bf17cde23989e71.jpg' }, // Replace with your image URL
+        // Or use a local file if available:
+        // image: { url: './media/miku.jpg' },
         caption: text.trim(),
         mentions: [m.sender]
-      }, { quoted: m })
-    } catch (videoError) {
-      console.error('Failed to send menu with video:', videoError)
+      }
+
+      await conn.sendMessage(m.chat, mediaOptions, { quoted: m })
+    } catch (mediaError) {
+      console.error('Failed to send menu with media:', mediaError)
       
-      // Fallback to just text if video fails
+      // Fallback to just text
       await conn.sendMessage(m.chat, {
         text: text.trim(),
         mentions: [m.sender]
@@ -136,7 +149,7 @@ handler.register = true
 
 export default handler
 
-// Helper functions
+// Helper functions remain the same
 function clockString(ms) {
   let h = isNaN(ms) ? '--' : Math.floor(ms / 3600000)
   let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
