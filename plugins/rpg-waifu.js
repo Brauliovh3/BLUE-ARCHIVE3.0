@@ -136,6 +136,39 @@ const waifuList = [
         rarity: "ultra rara",
         probability: 2,
         img: "./ultra/len_ultra.png"
+    },
+
+    //Legendarias (01% de Probabilidad)
+
+    {
+        name: "💙HATSUNE MIKU💙",
+        rarity: "Legendaria",
+        probability: 1,
+        img: "./ultra/miku_ultra.png"
+    },
+    {
+        name: "💗EMU OTORI💗",
+        rarity: "Legendaria",
+        probability: 1,
+        img: "./ultra/emu_ultra.png"
+    },
+    {
+        name: "❤KASANE TETO❤",
+        rarity: "Legendaria",
+        probability: 1,
+        img: "./ultra/teto_ultra.png"
+    },
+    {
+        name: "💛KAGAMINE RIN💛",
+        rarity: "Legendaria",
+        probability: 1,
+        img: "./ultra/rin_ultra.png"
+    },
+    {
+        name: "💥KAGAMINE LEN💢",
+        rarity: "Legendaria",
+        probability: 1,
+        img: "./ultra/len_ultra.png"
     }
 ];
 
@@ -171,7 +204,8 @@ let handler = async (m, { conn }) => {
         'común': '⚪',
         'rara': '🔵',
         'épica': '🟣',
-        'ultra rara': '🟡'
+        'ultra rara': '🟡',
+        'Legendaria': '🔴'
     };
 
     // Crear mensaje
