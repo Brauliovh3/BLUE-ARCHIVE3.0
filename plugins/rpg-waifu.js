@@ -168,13 +168,13 @@ const waifuList = [
         name: "💙Brazilian Miku💛",
         rarity: "Legendaria",
         probability: 1,
-        img: "./legend/miku_legend.png"
+        img: "./legend/miku_legend.jpg"
     },
     {
         name: "🖤Inabakumori🖤",
         rarity: "Legendaria",
         probability: 1,
-        img: "./legend/ibana_legend.png"
+        img: "./legend/ibana_legend.jpg"
     },
     {
         name: "❤KASANE TETO❤",
@@ -192,7 +192,7 @@ const waifuList = [
         name: "❤️🩷VOCALOIDS💛💙",
         rarity: "Legendaria",
         probability: 1,
-        img: "./legend/voca_legend.png"
+        img: "./legend/voca_legend.jpg"
     }
 ];
 
