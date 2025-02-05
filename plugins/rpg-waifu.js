@@ -56,6 +56,12 @@ const waifuList = [
         img: "./raros/miku_raro.png"
     },
     {
+        name: "Akita Neru 2006",
+        rarity: "rara",
+        probability: 6,
+        img: "./raros/neru_raro.png"
+    },
+    {
         name: "Rin",
         rarity: "rara",
         probability: 6,
@@ -88,6 +94,12 @@ const waifuList = [
         img: "./epicos/miku_epico.png"
     },
     {
+        name: "💛Neru💛",
+        rarity: "épica",
+        probability: 5,
+        img: "./epicos/neru_epico.png"
+    },
+    {
         name: "💛Rin💛",
         rarity: "épica",
         probability: 5,
@@ -118,6 +130,12 @@ const waifuList = [
         rarity: "ultra rara",
         probability: 2,
         img: "./ultra/miku_ultra.png"
+    },
+     {
+        name: "💛AKITA NERU💛",
+        rarity: "ultra rara",
+        probability: 2,
+        img: "./ultra/neru_ultra.png"
     },
     {
         name: "💗EMU OTORI💗",
