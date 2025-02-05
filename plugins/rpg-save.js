@@ -8,33 +8,45 @@ let handler = async (m, { conn }) => {
 
     try {
         // Verificar si el usuario está respondiendo a un mensaje
-        if (m.quoted) {
-            // Verificar si el mensaje es del bot
-            if (!m.quoted.fromMe) {
-                return m.reply('💙 Debes responder a un mensaje del bot que muestre un personaje.');
-            }
-
-            // Obtener el waifuId del mensaje citado
-            const currentWaifuOwner = Object.keys(global.db.waifu.waifus).find(key => 
-                global.db.waifu.waifus[key] && 
-                global.db.waifu.waifus[key].messageId === m.quoted.id
-            );
-
-            // Si la waifu existe pero pertenece a otro usuario
-            if (currentWaifuOwner && currentWaifuOwner !== userId) {
-                return m.reply('💙 No puedes reclamar este personaje. Pertenece a otro usuario.');
-            }
-
-            // Si no hay una waifu disponible para reclamar
-            if (!global.db.waifu.waifus[userId]) {
-                return m.reply('💙 No hay personaje disponible para guardar o ya fue reclamado.');
-            }
-        } else {
+        if (!m.quoted) {
             return m.reply('💙 Debes responder al mensaje donde se mostró el personaje.');
         }
 
+        // Verificar si el mensaje es del bot
+        if (!m.quoted.fromMe) {
+            return m.reply('💙 Debes responder a un mensaje del bot que muestre un personaje.');
+        }
+
+        // Verificar si existe la estructura de waifus
+        if (!global.db.waifu.waifus) {
+            return m.reply('💙 No hay personajes disponibles para guardar.');
+        }
+
+        // Obtener el waifuId del mensaje citado
+        const currentWaifuOwner = Object.keys(global.db.waifu.waifus).find(key => 
+            global.db.waifu.waifus[key] && 
+            global.db.waifu.waifus[key].messageId === m.quoted.id
+        );
+
+        // Si no se encuentra la waifu
+        if (!currentWaifuOwner) {
+            return m.reply('💙 No se encontró el personaje en el sistema.');
+        }
+
+        // Si la waifu pertenece a otro usuario
+        if (currentWaifuOwner !== userId) {
+            return m.reply('💙 No puedes reclamar este personaje. Pertenece a otro usuario.');
+        }
+
+        // Si no hay una waifu disponible para el usuario
+        if (!global.db.waifu.waifus[userId]) {
+            return m.reply('💙 No hay personaje disponible para guardar o ya fue reclamado.');
+        }
+
         // Inicializar colección si no existe
-        if (!global.db.waifu.collection) global.db.waifu.collection = {};
+        if (!global.db.waifu.collection) {
+            global.db.waifu.collection = {};
+        }
         if (!global.db.waifu.collection[userId]) {
             global.db.waifu.collection[userId] = [];
         }
@@ -48,7 +60,7 @@ let handler = async (m, { conn }) => {
 
         if (waifuExists) {
             delete global.db.waifu.waifus[userId];
-            return m.reply('💙 Ya tiene este personaje en su colección.');
+            return m.reply('💙 Ya tienes este personaje en tu colección.');
         }
 
         // Guardar waifu en la colección
@@ -61,16 +73,18 @@ let handler = async (m, { conn }) => {
         delete global.db.waifu.waifus[userId];
 
         // Mensaje de éxito
-        let message = `✅ ¡VOCALOID GUARDADA! ✅\n\n`;
-        message += `💌 Waifu: ${currentWaifu.name}\n`;
-        message += `✨ Rareza: ${currentWaifu.rarity.toUpperCase()}\n`;
-        message += `📚 Total en colección: ${global.db.waifu.collection[userId].length}`;
-        message += `☢️Usa .col,.mochila,.coleccion. para ver tus personajes🌱;
+        const message = [
+            '✅ ¡VOCALOID GUARDADA! ✅\n',
+            `💌 Waifu: ${currentWaifu.name}`,
+            `✨ Rareza: ${currentWaifu.rarity.toUpperCase()}`,
+            `📚 Total en colección: ${global.db.waifu.collection[userId].length}`,
+            `☢️ Usa .col, .mochila o .coleccion para ver tus personajes 🌱`
+        ].join('\n');
         
         return m.reply(message);
 
     } catch (e) {
-        console.error(e);
+        console.error('Error en save handler:', e);
         return m.reply('❌ Error al guardar la waifu. Intenta de nuevo.');
     }
 }
