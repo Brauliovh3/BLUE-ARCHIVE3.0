@@ -18,7 +18,7 @@ const waifuList = [
         img: "./chibis/miku_chibi.png"
     },
     {
-        name: "Akita Neru Chibi",
+        name: "Neru Chibi",
         rarity: "común",
         probability: 7,
         img: "./chibis/neru_chibi.png"
@@ -165,34 +165,34 @@ const waifuList = [
     //Legendarias (01% de Probabilidad)
 
     {
-        name: "💙HATSUNE MIKU💙",
+        name: "💙Brazilian Miku💛",
         rarity: "Legendaria",
         probability: 1,
-        img: "./ultra/miku_ultra.png"
+        img: "./legend/miku_legend.png"
     },
     {
-        name: "💗EMU OTORI💗",
+        name: "🖤Inabakumori🖤",
         rarity: "Legendaria",
         probability: 1,
-        img: "./ultra/emu_ultra.png"
+        img: "./legend/ibana_legend.png"
     },
     {
         name: "❤KASANE TETO❤",
         rarity: "Legendaria",
         probability: 1,
-        img: "./ultra/teto_ultra.png"
+        img: "./legend/teto_legend.png"
     },
     {
-        name: "💛KAGAMINE RIN💛",
+        name: "☢️Cyberpunk Edgeruners💫",
         rarity: "Legendaria",
         probability: 1,
-        img: "./ultra/rin_ultra.png"
+        img: "./legend/cyber_legend.png"
     },
     {
-        name: "💥KAGAMINE LEN💢",
+        name: "❤️🩷VOCALOIDS💛💙",
         rarity: "Legendaria",
         probability: 1,
-        img: "./ultra/len_ultra.png"
+        img: "./legend/voca_legend.png"
     }
 ];
 
