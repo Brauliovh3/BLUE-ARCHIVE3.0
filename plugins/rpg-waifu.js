@@ -18,6 +18,12 @@ const waifuList = [
         img: "./chibis/miku_chibi.png"
     },
     {
+        name: "Akita Neru Chibi",
+        rarity: "común",
+        probability: 7,
+        img: "./chibis/neru_chibi.png"
+    },
+    {
         name: "Rin Chibi",
         rarity: "común",
         probability: 7,
