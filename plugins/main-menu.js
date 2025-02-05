@@ -1,6 +1,5 @@
 import { promises as fs } from 'fs'
 import { join } from 'path'
-import fetch from 'node-fetch'
 import { xpRange } from '../lib/levelling.js'
 
 const tags = {
@@ -43,102 +42,89 @@ const defaultMenu = {
   header: '╔═══◇◆🥬【 𝑴𝑬𝑵Ú メ %category 】🥬◆◇═══╗\n║╔───────────────────────────',
   body: '🩵║ %cmd %islimit %isPremium\n',
   footer: '║╚───────────────────────────\n╚═════════◆◇◆═════════╝\n',
-  after: `> 🩵 ${process.env.TEXTBOT || 'Hatsune Miku Bot'}`
+  after: '> 🩵 Hatsune Miku Bot'
 }
 
 const handler = async (m, { conn, usedPrefix: _p, __dirname }) => {
   try {
-    // Read package.json with error handling
-    let _package = {}
-    try {
-      _package = JSON.parse(await fs.readFile(join(__dirname, '../package.json')))
-    } catch (e) {
-      console.error('Failed to read package.json:', e)
-    }
-
-    // Get user data with default values
-    const { exp = 0, limit = 0, level = 0 } = global.db.data.users[m.sender] || {}
+    // Initialize user data with safe defaults
+    const userData = global.db.data.users[m.sender] || {}
+    const { exp = 0, limit = 0, level = 0 } = userData
+    
+    // Get XP range
     const { min, xp, max } = xpRange(level, global.multiplier)
     
     // Get user name safely
-    let name = ''
-    try {
-      name = await conn.getName(m.sender)
-    } catch (e) {
-      console.error('Failed to get user name:', e)
-      name = m.sender.split('@')[0]
-    }
-
-    // Time calculations
-    const d = new Date()
-    const locale = 'es'
-    const time = d.toLocaleTimeString(locale)
+    let name = await conn.getName(m.sender).catch(() => m.sender.split('@')[0])
+    
+    // Calculate uptime
     const uptime = process.uptime() * 1000
     const muptime = clockString(uptime)
     
-    // Get total registered users
+    // Get total registered users safely
     const totalreg = Object.keys(global.db.data.users || {}).length
-
-    // Get greeting based on hour
-    const greeting = getGreeting(d.getHours())
-
-    // Get help menu
-    const help = Object.values(global.plugins || {})
-      .filter(plugin => !plugin.disabled)
-      .map(plugin => ({
-        help: Array.isArray(plugin.tags) ? plugin.help : [plugin.help],
-        tags: Array.isArray(plugin.tags) ? plugin.tags : [plugin.tags],
-        prefix: 'customPrefix' in plugin,
-        limit: plugin.limit,
-        premium: plugin.premium,
-        enabled: !plugin.disabled,
-      }))
-
+    
+    // Get plugins safely
+    const plugins = Object.values(global.plugins || {}).filter(p => !p.disabled)
+    
+    // Get current hour for greeting
+    const hour = new Date().getHours()
+    const greeting = getGreeting(hour)
+    
     // Build menu text
     let text = [
       defaultMenu.before,
       ...Object.keys(tags).map(tag => {
-        return defaultMenu.header.replace(/%category/g, tags[tag]) + '\n' + [
-          ...help.filter(menu => menu.tags && menu.tags.includes(tag) && menu.help).map(menu => {
-            return menu.help.map(help => {
-              return defaultMenu.body.replace(/%cmd/g, menu.prefix ? help : '%p' + help)
-                .replace(/%islimit/g, menu.limit ? '◜💙◞' : '')
-                .replace(/%isPremium/g, menu.premium ? '◜🪪◞' : '')
+        const categoryPlugins = plugins.filter(p => p.tags && p.tags.includes(tag))
+        if (categoryPlugins.length === 0) return ''
+        
+        return defaultMenu.header.replace(/%category/g, tags[tag]) + '\n' + 
+          categoryPlugins.map(plugin => {
+            const help = Array.isArray(plugin.help) ? plugin.help : [plugin.help]
+            return help.map(cmd => 
+              defaultMenu.body
+                .replace(/%cmd/g, plugin.prefix ? cmd : _p + cmd)
+                .replace(/%islimit/g, plugin.limit ? '◜💙◞' : '')
+                .replace(/%isPremium/g, plugin.premium ? '◜🪪◞' : '')
                 .trim()
-            }).join('\n')
-          }),
+            ).join('\n')
+          }).join('\n') + 
           defaultMenu.footer
-        ].join('\n')
-      }),
+      }).filter(Boolean),
       defaultMenu.after
     ].join('\n')
 
-    // Replace variables in text
-    text = text.replace(new RegExp(`%(${Object.keys({
-      '%': '%',
-      p: _p, uptime, muptime,
-      name, totalreg,
-      greeting
-    }).sort((a, b) => b.length - a.length).join`|`})`, 'g'), (_, name) => '' + {
-      '%': '%',
-      p: _p, uptime, muptime,
-      name, totalreg,
-      greeting
-    }[name])
+    // Replace variables
+    text = text.replace(new RegExp(`%(${[
+      'name', 'greeting', 'muptime', 'totalreg'
+    ].join('|')})`, 'g'), (_, name) => ({
+      name, greeting, muptime, totalreg
+    })[name])
 
-    // Send menu message
+    // Add reaction
     await m.react('💙')
-    
-    await conn.sendMessage(m.chat, {
-      video: { url: 'https://qu.ax/OaOR.mp4' },
-      gifPlayback: true,
-      caption: text.trim(),
-      mentions: [m.sender]
-    }, { quoted: m })
+
+    // Try to send with video first
+    try {
+      await conn.sendMessage(m.chat, {
+        video: { url: 'https://media.tenor.com/TPVTyFQoYqcAAAAC/hatsune-miku.mp4' },
+        gifPlayback: true,
+        caption: text.trim(),
+        mentions: [m.sender]
+      }, { quoted: m })
+    } catch (videoError) {
+      console.error('Failed to send menu with video:', videoError)
+      
+      // Fallback to just text if video fails
+      await conn.sendMessage(m.chat, {
+        text: text.trim(),
+        mentions: [m.sender]
+      }, { quoted: m })
+    }
 
   } catch (e) {
     console.error('Menu error:', e)
-    conn.reply(m.chat, '❎ Lo sentimos, el menú tiene un error.', m)
+    await conn.reply(m.chat, '❎ Lo sentimos, el menú tiene un error.', m)
     throw e
   }
 }
