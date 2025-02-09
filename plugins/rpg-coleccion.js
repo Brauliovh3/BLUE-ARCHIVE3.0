@@ -1,30 +1,14 @@
 let handler = async (m, { conn }) => {
     const userId = m.sender;
     
-    // Verificar si existe la base de datos
-    if (!global.db.waifu) {
-        return m.reply('💙 Error del sistema. La base de datos de waifus no está inicializada.');
+    if (!global.db.waifu?.collection?.[userId]) {
+        return m.reply('📝 Tu colección está vacía. Usa .rw para obtener personajes.');
     }
-    
+
     try {
-        // Verificar si el usuario tiene una colección
-        if (!global.db.waifu.collection[userId] || global.db.waifu.collection[userId].length === 0) {
-            return m.reply('📝 Tu colección está vacía. Usa .rw para obtener personajes.');
-        }
-
-        // Ordenar la colección por rareza
-        const sortedCollection = [...global.db.waifu.collection[userId]].sort((a, b) => {
-            const rarityOrder = {
-                'Legendaria': 0,
-                'ultra rara': 1,
-                'épica': 2,
-                'rara': 3,
-                'común': 4
-            };
-            return rarityOrder[a.rarity] - rarityOrder[b.rarity];
-        });
-
-        // Contar personajes por rareza
+        const collection = global.db.waifu.collection[userId];
+        
+        // Contadores por rareza
         const rarityCount = {
             'Legendaria': 0,
             'ultra rara': 0,
@@ -33,22 +17,25 @@ let handler = async (m, { conn }) => {
             'común': 0
         };
 
-        sortedCollection.forEach(waifu => {
-            rarityCount[waifu.rarity]++;
-        });
+        collection.forEach(waifu => rarityCount[waifu.rarity]++);
 
-        // Crear mensaje
-        let message = `🎲 *TU COLECCIÓN DE VOCALOIDS* 🎲\n\n`;
-        message += `📊 *Resumen de Colección:*\n`;
-        message += `🔴 Legendarias (1%): ${rarityCount['Legendaria']}\n`;
-        message += `🟡 Ultra Raras (10%): ${rarityCount['ultra rara']}\n`;
-        message += `🟣 Épicas (25%): ${rarityCount['épica']}\n`;
-        message += `🔵 Raras (30%): ${rarityCount['rara']}\n`;
-        message += `⚪ Comunes (35%): ${rarityCount['común']}\n`;
-        message += `📚 Total en colección: ${sortedCollection.length}\n\n`;
-        message += `📝 *Lista de Personajes:*\n`;
+        // Crear mensaje con formato bonito
+        let message = `╭━━━━『💙*VOCALOID COLLECTION*💙』━━━━╮\n\n`;
+        
+        // Mostrar resumen con barras de progreso
+        message += `❯💙*RESUMEN DE COLECCIÓN*💙❮\n`;
+        message += `\n┌──『 Rareza 』───『 Cantidad 』──┐\n`;
+        message += `│ 🔴 Legendaria  │ ${rarityCount['Legendaria'].toString().padEnd(3)} │ ${createBar(rarityCount['Legendaria'], 10)} │\n`;
+        message += `│ 🟡 Ultra Rara  │ ${rarityCount['ultra rara'].toString().padEnd(3)} │ ${createBar(rarityCount['ultra rara'], 10)} │\n`;
+        message += `│ 🟣 Épica       │ ${rarityCount['épica'].toString().padEnd(3)} │ ${createBar(rarityCount['épica'], 10)} │\n`;
+        message += `│ 🔵 Rara        │ ${rarityCount['rara'].toString().padEnd(3)} │ ${createBar(rarityCount['rara'], 10)} │\n`;
+        message += `│ ⚪ Común       │ ${rarityCount['común'].toString().padEnd(3)} │ ${createBar(rarityCount['común'], 10)} │\n`;
+        message += `└────────────────────────────┘\n\n`;
 
-        // Agrupar por rareza
+        // Total
+        message += `📊 Total: ${collection.length} personajes\n\n`;
+
+        // Mostrar personajes por rareza
         const rarityEmojis = {
             'Legendaria': '🔴',
             'ultra rara': '🟡',
@@ -57,20 +44,41 @@ let handler = async (m, { conn }) => {
             'común': '⚪'
         };
 
-        let currentRarity = '';
-        sortedCollection.forEach((waifu, index) => {
-            if (currentRarity !== waifu.rarity) {
-                currentRarity = waifu.rarity;
-                message += `\n${rarityEmojis[waifu.rarity]} *${waifu.rarity.toUpperCase()}*:\n`;
+        // Agrupar por rareza
+        const groupedByRarity = {};
+        collection.forEach(waifu => {
+            if (!groupedByRarity[waifu.rarity]) {
+                groupedByRarity[waifu.rarity] = [];
             }
-            message += `${index + 1}. ${waifu.name}\n`;
+            groupedByRarity[waifu.rarity].push(waifu);
         });
 
-        return m.reply(message);
+        // Mostrar cada grupo
+        for (const rarity of Object.keys(rarityCount)) {
+            if (groupedByRarity[rarity]?.length > 0) {
+                message += `╭─『 ${rarityEmojis[rarity]} ${rarity.toUpperCase()} 』\n`;
+                groupedByRarity[rarity].forEach((waifu, index) => {
+                    message += `│ ${(index + 1).toString().padStart(2)}. ${waifu.name}\n`;
+                });
+                message += `╰────────────\n`;
+            }
+        }
+
+        message += `\n╰━━━━『 *FIN DE COLECCIÓN* 』━━━━╯`;
+        
+        return conn.reply(m.chat, message, m);
+
     } catch (e) {
         console.log(e);
         return m.reply('💙 Error al mostrar la colección. Intenta de nuevo.');
     }
+}
+
+// Función para crear barras de progreso
+function createBar(value, maxSize) {
+    const filled = Math.ceil((value / 20) * maxSize); // Asumiendo máximo de 20 por rareza
+    const empty = maxSize - filled;
+    return '█'.repeat(filled) + '░'.repeat(empty);
 }
 
 handler.help = ['collection', 'coleccion']
