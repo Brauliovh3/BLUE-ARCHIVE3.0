@@ -29,12 +29,23 @@ let handler = async (m, { conn }) => {
       'tengo novia': './media/tengo novia.mp3'
     };
 
-    // Buscar si alguna clave coincide con el texto recibido
+
+    if (text === '.menu2' || text === '.menumiku') {
+      let menu = '💙 *Menú de Audios Miku* 💙\n\n';
+      for (let key in audioMap) {
+        menu += `🔊 *${key}*\n`;
+      }
+      menu += '\n💙 Escribe el nombre del audio para reproducirlo.';
+      m.reply(menu);
+      return;
+    }
+
+   
     for (let key in audioMap) {
       if (text.includes(key.toLowerCase())) {  // Comparar en minúsculas
         let filePath = audioMap[key];
         if (fs.existsSync(filePath)) {
-          // Enviar el archivo de audio como mensaje de voz
+     
           await conn.sendFile(m.chat, filePath, `${key}.mp3`, null, m, true, { type: 'audioMessage' });
         } else {
           m.reply(`El archivo de audio correspondiente a "${key}" no se encontró.`);
@@ -48,16 +59,17 @@ let handler = async (m, { conn }) => {
   }
 };
 
-// Ayuda y comandos reconocidos
+
 handler.help = [
   'miku', 'mine', 'ayuda', 'baneado', 'gey', 'ara', 
   'bañate', 'bot', 'buenos días', 'felíz cumpleaños', 'invocar', 
-  'hentai', 'nose', 'lala', 'ya', 'sad', 'risa', 'motivar', 'calculadora', 'tengo novia'
+  'hentai', 'nose', 'lala', 'ya', 'sad', 'risa', 'motivar', 'calculadora', 'tengo novia',
+  'menu2', 'menumiku'
 ];
 
-// Prefijos y comandos, corregido el prefijo personalizado
-handler.customPrefix = /^(miku|mine|baneado|ayuda|gey|ara|bañate|bot|buenos días|felíz cumpleaños|invocar|hentai|nose|canal|ya|sad|risa|motivar|calculadora|tengo novia)$/i;
-handler.command = new RegExp;
+
+handler.command = /^(miku|mine|baneado|ayuda|gey|ara|bañate|bot|buenos días|felíz cumpleaños|invocar|hentai|nose|canal|ya|sad|risa|motivar|calculadora|tengo novia|menu2|menumiku)$/i;
+
 handler.tags = ['Audios Miku'];
 
 export default handler;
