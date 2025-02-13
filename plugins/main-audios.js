@@ -3,7 +3,6 @@ import fs from 'fs';
 let handler = async (m, { conn }) => {
   try {
     let text = m.text.toLowerCase();
-    let user = global.db.data.users[m.sender];
 
     const audioMap = {
       'miku': './media/miku.mp3',
@@ -29,28 +28,12 @@ let handler = async (m, { conn }) => {
       'tengo novia': './media/tengo novia.mp3'
     };
 
-
-    if (text === '.menu2' || text === '.menumiku') {
-      let menu = '💙 *Menú de Audios Miku* 💙\n\n';
-      for (let key in audioMap) {
-        menu += `🔊 *${key}*\n`;
-      }
-      menu += '\n💙 Escribe el nombre del audio para reproducirlo.';
-      m.reply(menu);
-      return;
-    }
-
-   
-    for (let key in audioMap) {
-      if (text.includes(key.toLowerCase())) {  // Comparar en minúsculas
-        let filePath = audioMap[key];
-        if (fs.existsSync(filePath)) {
-     
-          await conn.sendFile(m.chat, filePath, `${key}.mp3`, null, m, true, { type: 'audioMessage' });
-        } else {
-          m.reply(`El archivo de audio correspondiente a "${key}" no se encontró.`);
-        }
-        break; // Romper el bucle si se encuentra y envía un audio
+    if (audioMap[text]) {
+      let filePath = audioMap[text];
+      if (fs.existsSync(filePath)) {
+        await conn.sendFile(m.chat, filePath, `${text}.mp3`, null, m, true, { type: 'audioMessage' });
+      } else {
+        m.reply(`El archivo de audio correspondiente a "${text}" no se encontró.`);
       }
     }
   } catch (err) {
@@ -59,16 +42,13 @@ let handler = async (m, { conn }) => {
   }
 };
 
-
 handler.help = [
   'miku', 'mine', 'ayuda', 'baneado', 'gey', 'ara', 
   'bañate', 'bot', 'buenos días', 'felíz cumpleaños', 'invocar', 
-  'hentai', 'nose', 'lala', 'ya', 'sad', 'risa', 'motivar', 'calculadora', 'tengo novia',
-  'menu2', 'menumiku'
+  'hentai', 'nose', 'canal', 'ya', 'sad', 'risa', 'motivar', 'calculadora', 'tengo novia'
 ];
 
-
-handler.command = /^(miku|mine|baneado|ayuda|gey|ara|bañate|bot|buenos días|felíz cumpleaños|invocar|hentai|nose|canal|ya|sad|risa|motivar|calculadora|tengo novia|menu2|menumiku)$/i;
+handler.command = /^(miku|mine|baneado|ayuda|gey|ara|bañate|bot|buenos días|felíz cumpleaños|invocar|hentai|nose|canal|ya|sad|risa|motivar|calculadora|tengo novia)$/i;
 
 handler.tags = ['Audios Miku'];
 
