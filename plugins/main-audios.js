@@ -51,7 +51,7 @@ let handler = async (m, { conn }) => {
     }
   } catch (error) {
     console.error('Error en el manejador de audio:', error);
-    m.reply('❌ Ocurrió un error al procesar el audio.');
+    m.reply('💙 Ocurrió un error al procesar el audio.');
   }
 };
 
