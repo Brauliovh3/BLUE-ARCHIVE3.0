@@ -2,43 +2,157 @@ import fetch from 'node-fetch';
 import yts from 'yt-search';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import fs from 'fs';
+import path from 'path';
 
 const execAsync = promisify(exec);
+const downloadFolder = '/tmp'; // Usar el directorio temporal
 
-// Función para descargar con yt-dlp
-const downloadWithYtDlp = async (url, format) => {
+
+if (!fs.existsSync(downloadFolder)) {
+  fs.mkdirSync(downloadFolder, { recursive: true });
+}
+
+
+const sanitizeFilename = (filename) => {
+  return filename
+    .replace(/[/\\?%*:|"<>]/g, '-') // Reemplazar caracteres no permitidos
+    .replace(/\s+/g, '_') // Reemplazar espacios con guiones bajos
+    .substring(0, 100); // Limitar la longitud del nombre
+};
+
+// APIs para descargar audio y video
+const audioApis = [
+  { url: (videoUrl) => fetch(`https://api.neoxr.eu/api/youtube?url=${videoUrl}&type=audio&quality=128kbps&apikey=GataDios`).then(res => res.json()), extract: (data) => data.data.url },
+  { url: (videoUrl) => fetch(`https://api.fgmods.xyz/api/downloader/ytmp3?url=${videoUrl}&apikey=${fgkeysapi}`).then(res => res.json()), extract: (data) => data.result.dl_url },
+  { url: (videoUrl) => fetch(`https://api.siputzx.my.id/api/d/ytmp3?url=${videoUrl}`).then(res => res.json()), extract: (data) => data.dl },
+  { url: (videoUrl) => fetch(`https://api.zenkey.my.id/api/download/ytmp3?apikey=zenkey&url=${videoUrl}`).then(res => res.json()), extract: (data) => data.result.download.url }
+];
+
+const videoApis = [
+  { url: (videoUrl) => fetch(`https://api.neoxr.eu/api/youtube?url=${videoUrl}&type=video&quality=720p&apikey=GataDios`).then(res => res.json()), extract: (data) => data.data.url },
+  { url: (videoUrl) => fetch(`https://api.fgmods.xyz/api/downloader/ytmp4?url=${videoUrl}&apikey=${fgkeysapi}`).then(res => res.json()), extract: (data) => data.result.dl_url },
+  { url: (videoUrl) => fetch(`https://api.siputzx.my.id/api/d/ytmp4?url=${videoUrl}`).then(res => res.json()), extract: (data) => data.dl },
+  { url: (videoUrl) => fetch(`https://exonity.tech/api/ytdlp2-faster?apikey=adminsepuh&url=${videoUrl}`).then(res => res.json()), extract: (data) => data.result.media.mp4 }
+];
+
+// Función para descargar usando las APIs
+const downloadWithAPI = async (videoUrl, isAudio = true) => {
+  const apis = isAudio ? audioApis : videoApis;
+  for (const api of apis) {
+    try {
+      const response = await api.url(videoUrl);
+      const downloadUrl = api.extract(response);
+      if (downloadUrl) {
+        return downloadUrl;
+      }
+    } catch (error) {
+      console.error(`Error con API: ${error}`);
+    }
+  }
+  return null;
+};
+
+
+const downloadAndSendWithAPI = async (conn, chatId, replyMsg, videoId, isAudio, title) => {
   try {
-    const { stdout, stderr } = await execAsync(
-      `yt-dlp -x --audio-format ${format} -o "downloads/%(title)s.%(ext)s" ${url}`
-    );
+    await conn.reply(chatId, `💙 Descargando ${isAudio ? 'audio' : 'video'}, por favor espera...`, replyMsg);
 
-    if (stderr) {
-      console.error(`Error en yt-dlp: ${stderr}`);
-      return null;
+    
+    const videoUrl = `https://youtu.be/${videoId}`;
+    const downloadUrl = await downloadWithAPI(videoUrl, isAudio);
+
+    if (!downloadUrl) {
+      await conn.reply(chatId, `💙 No se pudo descargar el ${isAudio ? 'audio' : 'video'}. Intenta más tarde.`, replyMsg);
+      return false;
     }
 
-    const outputFile = stdout.match(/\[download\] Destination: (.*)/)[1];
-    return outputFile;
+   
+    const buffer = await downloadToBuffer(downloadUrl);
+    if (!buffer) {
+      await conn.reply(chatId, `💙 El archivo descargado parece estar corrupto. Intenta más tarde.`, replyMsg);
+      return false;
+    }
+
+    
+    const sanitizedTitle = sanitizeFilename(title);
+    const tempFilePath = path.join(downloadFolder, `${sanitizedTitle}.${isAudio ? 'mp3' : 'mp4'}`);
+
+    
+    fs.writeFileSync(tempFilePath, buffer);
+
+    
+    if (isAudio) {
+      await conn.sendMessage(chatId, {
+        audio: fs.readFileSync(tempFilePath), 
+        mimetype: "audio/mpeg",
+        fileName: `${sanitizedTitle}.mp3`,
+        ptt: false
+      }, { quoted: replyMsg });
+    } else {
+      await conn.sendMessage(chatId, {
+        video: fs.readFileSync(tempFilePath), 
+        caption: `💙 ¡Disfruta tu video!`,
+        mimetype: 'video/mp4',
+        fileName: `${sanitizedTitle}.mp4`
+      }, { quoted: replyMsg });
+    }
+
+    
+    setTimeout(() => {
+      try {
+        fs.unlinkSync(tempFilePath);
+        console.log(`Archivo eliminado: ${tempFilePath}`);
+      } catch (err) {
+        console.error(`Error al eliminar archivo: ${err}`);
+      }
+    }, 10000); 
+
+    return true;
   } catch (error) {
-    console.error(`Error ejecutando yt-dlp: ${error}`);
+    console.error('Error descargando con API:', error);
+    await conn.reply(chatId, `💙 Ocurrió un error al procesar tu solicitud. Intenta más tarde.`, replyMsg);
+    return false;
+  }
+};
+
+
+const downloadToBuffer = async (url) => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
+
+    
+    const contentLength = response.headers.get('content-length');
+    if (contentLength && parseInt(contentLength) < 10000) { // Menos de 10KB
+      throw new Error('Archivo demasiado pequeño, posiblemente corrupto');
+    }
+
+    const buffer = await response.buffer();
+    return buffer;
+  } catch (error) {
+    console.error('Error descargando a buffer:', error);
     return null;
   }
 };
 
+
 let handler = async (m, { conn, text }) => {
-  // Verifica si se proporcionó un texto
+  
   if (!text) return conn.reply(m.chat, '💙 Ingresa el nombre de la canción o video que deseas buscar.', m);
 
   try {
-    // Buscar el video en YouTube
+    
     let res = await search(text);
     if (!res || res.length === 0) return conn.reply(m.chat, '💙 No se encontraron resultados para tu búsqueda.', m);
 
-    // Obtener detalles del primer resultado
+    
     const { title, thumbnail, timestamp, views, ago, videoId } = res[0];
 
-    // Mensaje con corazones azules
-    let txt = `💙 *[ YOUTUBE - PLAY ]*\n\n`
+    
+    let txt = `💙 *[ YOUTUBE - PLAY ] *\n\n`
             + `💙 *Título:* ${title}\n`
             + `💙 *Duración:* ${timestamp}\n`
             + `💙 *Visitas:* ${views}\n`
@@ -50,80 +164,31 @@ let handler = async (m, { conn, text }) => {
     // Enviar el mensaje con la miniatura del video
     let SM = await conn.sendFile(m.chat, thumbnail, 'thumbnail.jpg', txt, m);
 
-    // Escuchar la respuesta del usuario
+    
+    const handleOnce = new Set();
+
+    
     conn.ev.on("messages.upsert", async (upsertedMessage) => {
       let RM = upsertedMessage.messages[0];
       if (!RM.message) return;
 
       const UR = RM.message.conversation || RM.message.extendedTextMessage?.text;
       let UC = RM.key.remoteJid;
+      const msgId = RM.key.id;
 
-      // Verificar si la respuesta es para este mensaje
-      if (RM.message.extendedTextMessage?.contextInfo?.stanzaId === SM.key.id) {
+     
+      if (RM.message.extendedTextMessage?.contextInfo?.stanzaId === SM.key.id && !handleOnce.has(msgId)) {
+        // Marcar como procesado
+        handleOnce.add(msgId);
+
         if (UR === '1') {
-          // Intentar descargar audio con la API
-          try {
-            const apiAud = await fetch(`https://api.agungny.my.id/api/youtube-audio?url=https://youtu.be/${videoId}`);
-            const dataAud = await apiAud.json();
-
-            if (dataAud.result?.downloadUrl) {
-              await conn.sendMessage(UC, {
-                audio: { url: dataAud.result.downloadUrl },
-                mimetype: "audio/mpeg",
-                fileName: `${title}.mp3`,
-                ptt: false
-              }, { quoted: RM });
-            } else {
-              throw new Error('No se pudo obtener el enlace de descarga del audio.');
-            }
-          } catch (apiError) {
-            console.error('Error con la API de audio:', apiError);
-            // Intentar descargar con yt-dlp como respaldo
-            const audioFile = await downloadWithYtDlp(`https://youtu.be/${videoId}`, 'mp3');
-            if (audioFile) {
-              await conn.sendMessage(UC, {
-                audio: { url: `file://${audioFile}` },
-                mimetype: "audio/mpeg",
-                fileName: `${title}.mp3`,
-                ptt: false
-              }, { quoted: RM });
-            } else {
-              await conn.reply(UC, '💙 No se pudo descargar el audio.', RM);
-            }
-          }
+          
+          await downloadAndSendWithAPI(conn, UC, RM, videoId, true, title);
         } else if (UR === '2') {
-          // Intentar descargar video con la API
-          try {
-            const apiVid = await fetch(`https://api.agungny.my.id/api/youtube-video?url=https://youtu.be/${videoId}`);
-            const dataVid = await apiVid.json();
-
-            if (dataVid.result?.downloadUrl) {
-              await conn.sendMessage(UC, {
-                video: { url: dataVid.result.downloadUrl },
-                caption: `💙 ¡Disfruta tu video!`,
-                mimetype: 'video/mp4',
-                fileName: `${title}.mp4`
-              }, { quoted: RM });
-            } else {
-              throw new Error('No se pudo obtener el enlace de descarga del video.');
-            }
-          } catch (apiError) {
-            console.error('Error con la API de video:', apiError);
-            // Intentar descargar con yt-dlp como respaldo
-            const videoFile = await downloadWithYtDlp(`https://youtu.be/${videoId}`, 'mp4');
-            if (videoFile) {
-              await conn.sendMessage(UC, {
-                video: { url: `file://${videoFile}` },
-                caption: `💙 ¡Disfruta tu video!`,
-                mimetype: 'video/mp4',
-                fileName: `${title}.mp4`
-              }, { quoted: RM });
-            } else {
-              await conn.reply(UC, '💙 No se pudo descargar el video.', RM);
-            }
-          }
+          
+          await downloadAndSendWithAPI(conn, UC, RM, videoId, false, title);
         } else {
-          // Opción inválida
+         
           await conn.sendMessage(UC, { text: "💙 Opción inválida. Responde con 1 *(audio)* o 2 *(video)*." }, { quoted: RM });
         }
       }
@@ -134,15 +199,14 @@ let handler = async (m, { conn, text }) => {
   }
 };
 
-// Registrar el comando
+
 handler.command = ["play"];
 handler.help = ["play <canción>"];
 handler.tags = ["downloader"];
-
 export default handler;
 
-// Función para buscar videos en YouTube
+
 async function search(query, options = {}) {
   let search = await yts.search({ query, hl: "es", gl: "ES", ...options });
   return search.videos;
-                }
+}
