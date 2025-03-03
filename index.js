@@ -1,4 +1,4 @@
-console.log('✯ Iniciando ✯')
+console.log('01 Iniciando 01')
 
 import { join, dirname } from 'path'
 import { createRequire } from 'module'
@@ -10,16 +10,16 @@ import cfonts from 'cfonts'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const require = createRequire(__dirname)
 
-cfonts.say('Ai\nHoshino', {
+cfonts.say('Hatsune\nMiku', {
   font: 'chrome',
   align: 'center',
-  gradient: ['red', 'magenta']
+  gradient: ['cyan', 'cyan']
 })
 
 cfonts.say(`WhatsApp Bot Multi Device`, {
   font: 'console',
   align: 'center',
-  gradient: ['red', 'magenta']
+  gradient: ['cyan', 'magenta']
 })
 
 let isRunning = false
