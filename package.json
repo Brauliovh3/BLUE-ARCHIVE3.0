@@ -1,5 +1,5 @@
 {
-	"name": "Ai Hoshino",
+	"name": "hatsune-miku",
 	"version": "6.0.0",
 	"description": "Simple WhatsApp Bot Multi Device",
 	"main": "index.js",
@@ -23,9 +23,9 @@
 		"MD",
 		"baileys-md"
 	],
-	"homepage": "https://github.com/StarlightsTeam/Ai-Hoshino",
+	"homepage": "https://github.com/Brauliovh3",
 	"author": {
-		"name": "Irokz Dal ダーク⁩"
+		"name": "(ㅎㅊDEPOOLㅊㅎ)"
 	},
 	"repository": {
 		"type": "git",
