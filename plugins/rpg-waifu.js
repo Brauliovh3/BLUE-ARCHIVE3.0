@@ -298,6 +298,7 @@ let handler = async (m, { conn }) => {
 handler.help = ['rw']
 handler.tags = ['rpg']
 handler.command = /^(rw|rollwaifu)$/i
+handler.register = true
 handler.group = true
 handler.cooldown = 900000
 
