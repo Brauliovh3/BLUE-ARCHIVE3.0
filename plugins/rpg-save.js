@@ -92,7 +92,7 @@ let handler = async (m, { conn }) => {
         message += `💌 Waifu: ${currentWaifu.name}\n`;
         message += `✨ Rareza: ${currentWaifu.rarity.toUpperCase()}\n`;
         message += `🤖 Usuario: ${userName}\n`;
-        message += `🆔 ID: (${userId})\n`;
+        message += `🆔 ID: ${userId}\n`;
         message += `📚 Total en colección: ${db.users[userId].characters.length}\n`;
         message += `💙 Usa .col o .coleccion para ver tu colección`;
 
