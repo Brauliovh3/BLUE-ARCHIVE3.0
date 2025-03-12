@@ -22,14 +22,14 @@ const sanitizeFilename = (filename) => {
 // APIs para descargar audio y video
 const audioApis = [
   { url: (videoUrl) => fetch(`https://api.neoxr.eu/api/youtube?url=${videoUrl}&type=audio&quality=128kbps&apikey=GataDios`).then(res => res.json()), extract: (data) => data.data.url },
-  { url: (videoUrl) => fetch(`https://api.fgmods.xyz/api/downloader/ytmp3?url=${videoUrl}&apikey=${fgkeysapi}`).then(res => res.json()), extract: (data) => data.result.dl_url },
+  { url: (videoUrl) => fetch(`https://api.fgmods.xyz/api/downloader/ytmp3?url=${videoUrl}&apikey=YOUR_API_KEY`).then(res => res.json()), extract: (data) => data.result.dl_url },
   { url: (videoUrl) => fetch(`https://api.siputzx.my.id/api/d/ytmp3?url=${videoUrl}`).then(res => res.json()), extract: (data) => data.dl },
   { url: (videoUrl) => fetch(`https://api.zenkey.my.id/api/download/ytmp3?apikey=zenkey&url=${videoUrl}`).then(res => res.json()), extract: (data) => data.result.download.url }
 ];
 
 const videoApis = [
   { url: (videoUrl) => fetch(`https://api.neoxr.eu/api/youtube?url=${videoUrl}&type=video&quality=720p&apikey=GataDios`).then(res => res.json()), extract: (data) => data.data.url },
-  { url: (videoUrl) => fetch(`https://api.fgmods.xyz/api/downloader/ytmp4?url=${videoUrl}&apikey=${fgkeysapi}`).then(res => res.json()), extract: (data) => data.result.dl_url },
+  { url: (videoUrl) => fetch(`https://api.fgmods.xyz/api/downloader/ytmp4?url=${videoUrl}&apikey=YOUR_API_KEY`).then(res => res.json()), extract: (data) => data.result.dl_url },
   { url: (videoUrl) => fetch(`https://api.siputzx.my.id/api/d/ytmp4?url=${videoUrl}`).then(res => res.json()), extract: (data) => data.dl },
   { url: (videoUrl) => fetch(`https://exonity.tech/api/ytdlp2-faster?apikey=adminsepuh&url=${videoUrl}`).then(res => res.json()), extract: (data) => data.result.media.mp4 }
 ];
@@ -123,24 +123,30 @@ const downloadAndSendWithAPI = async (conn, chatId, replyMsg, videoId, isAudio, 
     const fileSizeMB = stats.size / (1024 * 1024);
 
     let sendResult;
-    if (fileSizeMB > 50) { // Si el archivo es mayor a 50MB, enviar como documento
+    if (fileSizeMB > 16) { // Si el archivo es mayor a 16MB, enviar como documento
       sendResult = await sendAsDocument(conn, chatId, tempFilePath, isAudio, title, replyMsg);
     } else {
-      // Envío normal como antes
-      if (isAudio) {
-        sendResult = await conn.sendMessage(chatId, {
-          audio: fs.readFileSync(tempFilePath), 
-          mimetype: "audio/mpeg",
-          fileName: `${sanitizedTitle}.mp3`,
-          ptt: false
-        }, { quoted: replyMsg });
-      } else {
-        sendResult = await conn.sendMessage(chatId, {
-          video: fs.readFileSync(tempFilePath), 
-          caption: `💙 ¡Disfruta tu video!`,
-          mimetype: 'video/mp4',
-          fileName: `${sanitizedTitle}.mp4`
-        }, { quoted: replyMsg });
+      // Envío normal como multimedia
+      try {
+        if (isAudio) {
+          sendResult = await conn.sendMessage(chatId, {
+            audio: fs.readFileSync(tempFilePath),
+            mimetype: "audio/mpeg",
+            fileName: `${sanitizedTitle}.mp3`,
+            ptt: false
+          }, { quoted: replyMsg });
+        } else {
+          sendResult = await conn.sendMessage(chatId, {
+            video: fs.readFileSync(tempFilePath),
+            caption: `💙 ¡Disfruta tu video!`,
+            mimetype: 'video/mp4',
+            fileName: `${sanitizedTitle}.mp4`
+          }, { quoted: replyMsg });
+        }
+      } catch (error) {
+        console.error('Error enviando multimedia:', error);
+        // Si falla el envío como multimedia, intentar como documento
+        sendResult = await sendAsDocument(conn, chatId, tempFilePath, isAudio, title, replyMsg);
       }
     }
 
@@ -162,102 +168,7 @@ const downloadAndSendWithAPI = async (conn, chatId, replyMsg, videoId, isAudio, 
   }
 };
 
-// Funciones adicionales para envío de documentos
-// Función 3: Enviar solo audio como documento
-const sendAudioDocument = async (conn, chatId, replyMsg, videoId, title) => {
-  try {
-    await conn.reply(chatId, '💙 Preparando audio como documento...', replyMsg);
 
-    const videoUrl = `https://youtu.be/${videoId}`;
-    const downloadUrl = await downloadWithAPI(videoUrl, true);
-
-    if (!downloadUrl) {
-      await conn.reply(chatId, '💙 No se pudo descargar el audio.', replyMsg);
-      return false;
-    }
-
-    const buffer = await downloadToBuffer(downloadUrl);
-    if (!buffer) {
-      await conn.reply(chatId, '💙 Error al descargar el audio.', replyMsg);
-      return false;
-    }
-
-    const sanitizedTitle = sanitizeFilename(title);
-    const tempFilePath = path.join(downloadFolder, `${sanitizedTitle}.mp3`);
-    fs.writeFileSync(tempFilePath, buffer);
-
-    await conn.sendMessage(chatId, {
-      document: fs.readFileSync(tempFilePath),
-      mimetype: 'audio/mpeg',
-      fileName: `${sanitizedTitle}.mp3`,
-      caption: '💙 Audio descargado como documento'
-    }, { quoted: replyMsg });
-
-    // Eliminar archivo temporal
-    setTimeout(() => {
-      try {
-        fs.unlinkSync(tempFilePath);
-      } catch (err) {
-        console.error(`Error al eliminar archivo: ${err}`);
-      }
-    }, 10000);
-
-    return true;
-  } catch (error) {
-    console.error('Error en sendAudioDocument:', error);
-    await conn.reply(chatId, '💙 Ocurrió un error al procesar tu solicitud.', replyMsg);
-    return false;
-  }
-};
-
-// Función 4: Enviar solo video como documento
-const sendVideoDocument = async (conn, chatId, replyMsg, videoId, title) => {
-  try {
-    await conn.reply(chatId, '💙 Preparando video como documento...', replyMsg);
-
-    const videoUrl = `https://youtu.be/${videoId}`;
-    const downloadUrl = await downloadWithAPI(videoUrl, false);
-
-    if (!downloadUrl) {
-      await conn.reply(chatId, '💙 No se pudo descargar el video.', replyMsg);
-      return false;
-    }
-
-    const buffer = await downloadToBuffer(downloadUrl);
-    if (!buffer) {
-      await conn.reply(chatId, '💙 Error al descargar el video.', replyMsg);
-      return false;
-    }
-
-    const sanitizedTitle = sanitizeFilename(title);
-    const tempFilePath = path.join(downloadFolder, `${sanitizedTitle}.mp4`);
-    fs.writeFileSync(tempFilePath, buffer);
-
-    await conn.sendMessage(chatId, {
-      document: fs.readFileSync(tempFilePath),
-      mimetype: 'video/mp4',
-      fileName: `${sanitizedTitle}.mp4`,
-      caption: '💙 Video descargado como documento'
-    }, { quoted: replyMsg });
-
-    // Eliminar archivo temporal
-    setTimeout(() => {
-      try {
-        fs.unlinkSync(tempFilePath);
-      } catch (err) {
-        console.error(`Error al eliminar archivo: ${err}`);
-      }
-    }, 10000);
-
-    return true;
-  } catch (error) {
-    console.error('Error en sendVideoDocument:', error);
-    await conn.reply(chatId, '💙 Ocurrió un error al procesar tu solicitud.', replyMsg);
-    return false;
-  }
-};
-
-// Manejador principal
 let handler = async (m, { conn, text }) => {
   if (!text) return conn.reply(m.chat, '💙 Ingresa el nombre de la canción o video que deseas buscar.', m);
 
@@ -292,7 +203,7 @@ let handler = async (m, { conn, text }) => {
       const msgId = RM.key.id;
 
       if (RM.message.extendedTextMessage?.contextInfo?.stanzaId === SM.key.id && !handleOnce.has(msgId)) {
-        // Marcar como procesado
+       
         handleOnce.add(msgId);
 
         if (UR === '1') {
