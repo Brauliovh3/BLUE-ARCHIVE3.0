@@ -67,6 +67,12 @@ const waifuList = [
         img: "./storage/raros/miku_raro.png"
     },
     {
+        name: "Sakine Meiko 2006",
+        rarity: "rara",
+        probability: 4.67,  // reducido de 6
+        img: "./storage/raros/miku_raro.png"
+    },
+    {
         name: "Hatsune Miku 2006",
         rarity: "rara",
         probability: 4.67,
