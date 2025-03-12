@@ -12,6 +12,41 @@
           "name": "Teto",
           "rarity": "rara",
           "obtainedAt": "2025-03-12T01:55:54.108Z"
+        },
+        {
+          "name": "Rin",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-12T02:44:29.618Z"
+        },
+        {
+          "name": "Emu Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-12T03:00:17.793Z"
+        },
+        {
+          "name": "Neru Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-12T03:35:12.467Z"
+        },
+        {
+          "name": "💛Neru💛",
+          "rarity": "épica",
+          "obtainedAt": "2025-03-12T04:55:59.592Z"
+        },
+        {
+          "name": "Rin Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-12T14:28:02.736Z"
+        },
+        {
+          "name": "Luka Megurine 2006",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-12T16:16:08.519Z"
+        },
+        {
+          "name": "Akita Neru 2006",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-12T19:15:58.057Z"
         }
       ]
     },
@@ -62,6 +97,31 @@
           "name": "Luka Chibi",
           "rarity": "común",
           "obtainedAt": "2025-03-11T04:35:52.315Z"
+        },
+        {
+          "name": "Luka Megurine 2006",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-12T03:52:33.742Z"
+        },
+        {
+          "name": "💗LUKA🪷",
+          "rarity": "épica",
+          "obtainedAt": "2025-03-12T06:02:39.275Z"
+        },
+        {
+          "name": "Teto Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-12T14:35:40.573Z"
+        },
+        {
+          "name": "Neru Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-12T16:05:24.875Z"
+        },
+        {
+          "name": "💙Miku💙",
+          "rarity": "épica",
+          "obtainedAt": "2025-03-12T17:19:42.264Z"
         }
       ]
     },
@@ -107,6 +167,16 @@
           "name": "💙Miku💙",
           "rarity": "épica",
           "obtainedAt": "2025-03-12T00:48:09.076Z"
+        },
+        {
+          "name": "Rin",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-12T02:59:02.122Z"
+        },
+        {
+          "name": "Teto",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-12T19:16:07.037Z"
         }
       ]
     },
@@ -157,6 +227,16 @@
           "name": "💛Rin💛",
           "rarity": "épica",
           "obtainedAt": "2025-03-10T21:28:21.245Z"
+        },
+        {
+          "name": "Emu Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-12T04:18:46.060Z"
+        },
+        {
+          "name": "Len (gei)",
+          "rarity": "épica",
+          "obtainedAt": "2025-03-12T04:49:28.190Z"
         }
       ]
     },
@@ -187,6 +267,11 @@
           "name": "Emu Chibi",
           "rarity": "común",
           "obtainedAt": "2025-03-12T01:41:37.811Z"
+        },
+        {
+          "name": "Hatsune Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-12T16:17:08.263Z"
         }
       ]
     },
@@ -212,6 +297,11 @@
           "name": "Teto",
           "rarity": "rara",
           "obtainedAt": "2025-03-11T21:02:42.667Z"
+        },
+        {
+          "name": "Rin Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-12T14:55:37.249Z"
         }
       ]
     },
@@ -267,6 +357,36 @@
           "name": "💙Miku💙",
           "rarity": "épica",
           "obtainedAt": "2025-03-12T00:49:28.476Z"
+        }
+      ]
+    },
+    "51963869948@s.whatsapp.net": {
+      "name": "꧁☬✞Nero✞☬꧂",
+      "characters": [
+        {
+          "name": "Len Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-12T03:26:47.590Z"
+        }
+      ]
+    },
+    "51939508653@s.whatsapp.net": {
+      "name": "Rafel",
+      "characters": [
+        {
+          "name": "Luka Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-12T03:56:59.596Z"
+        }
+      ]
+    },
+    "50497355017@s.whatsapp.net": {
+      "name": "Kevin Chavarria",
+      "characters": [
+        {
+          "name": "💛Rin💛",
+          "rarity": "épica",
+          "obtainedAt": "2025-03-12T14:23:14.787Z"
         }
       ]
     }
