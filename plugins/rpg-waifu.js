@@ -11,10 +11,16 @@ global.db.waifu = global.db.waifu || {
 const waifuList = [
     
     {
-        name: "Hatsune Chibi",
+        name: "Miku Chibi",
         rarity: "común",
         probability: 5,  
         img: "./storage/chibis/miku_chibi.png"
+    },
+    {
+        name: "Meiko Chibi",
+        rarity: "común",
+        probability: 5,  
+        img: "./storage/chibis/meiko_chibi.png"
     },
     {
         name: "Neru Chibi",
