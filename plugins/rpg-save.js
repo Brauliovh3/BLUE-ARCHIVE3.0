@@ -4,10 +4,10 @@ import path from 'path';
 const dbPath = path.join(process.cwd(), 'storage', 'waifudatabase');
 const databaseFilePath = path.join(dbPath, 'database.json');
 
-// Función para cargar la base de datos
+
 function loadDatabase() {
     if (!fs.existsSync(databaseFilePath)) {
-        return { users: {} }; // Si no existe, retorna estructura vacía
+        return { users: {} }; 
     }
     try {
         return JSON.parse(fs.readFileSync(databaseFilePath, 'utf-8'));
@@ -17,7 +17,7 @@ function loadDatabase() {
     }
 }
 
-// Función para guardar la base de datos
+
 function saveDatabase(data) {
     try {
         fs.writeFileSync(databaseFilePath, JSON.stringify(data, null, 2));
@@ -29,7 +29,7 @@ function saveDatabase(data) {
 
 let handler = async (m, { conn }) => {
     const userId = m.sender;
-    const userName = (await conn.getName(userId)) || 'Desconocido'; // Obtener el nombre del usuario
+    const userName = (await conn.getName(userId)) || 'Desconocido'; 
 
     if (!global.db.waifu) return m.reply('💙 Error del sistema. Intenta usar .rw primero.');
 
@@ -51,10 +51,10 @@ let handler = async (m, { conn }) => {
             return m.reply('💙 No hay personaje disponible para guardar o ya fue reclamado.');
         }
 
-        // Cargar la base de datos desde el archivo
+        
         let db = loadDatabase();
 
-        // Inicializar el usuario si no existe
+       
         if (!db.users[userId]) {
             db.users[userId] = {
                 name: userName,
@@ -64,7 +64,7 @@ let handler = async (m, { conn }) => {
 
         const currentWaifu = global.db.waifu.waifus[userId];
 
-        // Verificar si la waifu ya está en la colección del usuario
+        
         const waifuExists = db.users[userId].characters.some(
             waifu => waifu.name === currentWaifu.name && waifu.rarity === currentWaifu.rarity
         );
@@ -74,23 +74,23 @@ let handler = async (m, { conn }) => {
             return m.reply('💙 Ya tienes este personaje en tu colección.');
         }
 
-        // Guardar waifu en la colección del usuario
+       
         db.users[userId].characters.push({
             name: currentWaifu.name,
             rarity: currentWaifu.rarity,
             obtainedAt: new Date().toISOString()
         });
 
-        // Guardar cambios en el archivo
+        
         saveDatabase(db);
 
-        // Eliminar la waifu reclamada de la memoria temporal
+       
         delete global.db.waifu.waifus[userId];
 
-        // Mensaje de éxito
+        
         let message = `✅ ¡VOCALOID GUARDADA! ✅\n\n`;
-        message += `💌 Waifu: ${currentWaifu.name}\n`;
-        message += `✨ Rareza: ${currentWaifu.rarity.toUpperCase()}\n`;
+        message += `💙 Waifu: ${currentWaifu.name}\n`;
+        message += `💎 Rareza: ${currentWaifu.rarity.toUpperCase()}\n`;
         message += `🤖 Usuario: ${userName}\n`;
         message += `🆔 ID: ${userId}\n`;
         message += `📚 Total en colección: ${db.users[userId].characters.length}\n`;
