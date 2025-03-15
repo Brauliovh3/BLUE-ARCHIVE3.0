@@ -4,163 +4,109 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import fs from 'fs';
 import path from 'path';
+import axios from 'axios';
 
 const execAsync = promisify(exec);
-const downloadFolder = '/tmp'; // Usar el directorio temporal
+const downloadFolder = './descargas'; 
+const MAX_SIZE_MB = 100; 
 
 if (!fs.existsSync(downloadFolder)) {
   fs.mkdirSync(downloadFolder, { recursive: true });
 }
 
+
 const sanitizeFilename = (filename) => {
   return filename
-    .replace(/[/\\?%*:|"<>]/g, '-') // Reemplazar caracteres no permitidos
-    .replace(/\s+/g, '_') // Reemplazar espacios con guiones bajos
-    .substring(0, 100); // Limitar la longitud del nombre
+    .replace(/[/\\?%*:|"<>]/g, '-') 
+    .replace(/\s+/g, '_') 
+    .substring(0, 100); 
 };
 
-// APIs para descargar audio y video
-const audioApis = [
-  { url: (videoUrl) => fetch(`https://api.neoxr.eu/api/youtube?url=${videoUrl}&type=audio&quality=128kbps&apikey=GataDios`).then(res => res.json()), extract: (data) => data.data.url },
-  { url: (videoUrl) => fetch(`https://api.fgmods.xyz/api/downloader/ytmp3?url=${videoUrl}&apikey=YOUR_API_KEY`).then(res => res.json()), extract: (data) => data.result.dl_url },
-  { url: (videoUrl) => fetch(`https://api.siputzx.my.id/api/d/ytmp3?url=${videoUrl}`).then(res => res.json()), extract: (data) => data.dl },
-  { url: (videoUrl) => fetch(`https://api.zenkey.my.id/api/download/ytmp3?apikey=zenkey&url=${videoUrl}`).then(res => res.json()), extract: (data) => data.result.download.url }
-];
 
-const videoApis = [
-  { url: (videoUrl) => fetch(`https://api.neoxr.eu/api/youtube?url=${videoUrl}&type=video&quality=720p&apikey=GataDios`).then(res => res.json()), extract: (data) => data.data.url },
-  { url: (videoUrl) => fetch(`https://api.fgmods.xyz/api/downloader/ytmp4?url=${videoUrl}&apikey=YOUR_API_KEY`).then(res => res.json()), extract: (data) => data.result.dl_url },
-  { url: (videoUrl) => fetch(`https://api.siputzx.my.id/api/d/ytmp4?url=${videoUrl}`).then(res => res.json()), extract: (data) => data.dl },
-  { url: (videoUrl) => fetch(`https://exonity.tech/api/ytdlp2-faster?apikey=adminsepuh&url=${videoUrl}`).then(res => res.json()), extract: (data) => data.result.media.mp4 }
-];
-
-// Función para descargar usando las APIs
-const downloadWithAPI = async (videoUrl, isAudio = true) => {
-  const apis = isAudio ? audioApis : videoApis;
-  for (const api of apis) {
-    try {
-      const response = await api.url(videoUrl);
-      const downloadUrl = api.extract(response);
-      if (downloadUrl) {
-        return downloadUrl;
-      }
-    } catch (error) {
-      console.error(`Error con API: ${error}`);
-    }
-  }
-  return null;
-};
-
-// Función para descargar a buffer
-const downloadToBuffer = async (url) => {
+const getFileSize = async (url) => {
   try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Error HTTP: ${response.status}`);
-    }
-
-    const contentLength = response.headers.get('content-length');
-    if (contentLength && parseInt(contentLength) < 10000) { // Menos de 10KB
-      throw new Error('Archivo demasiado pequeño, posiblemente corrupto');
-    }
-
-    const buffer = await response.buffer();
-    return buffer;
+    const response = await axios.head(url);
+    const sizeInBytes = response.headers['content-length'] || 0;
+    return parseFloat((sizeInBytes / (1024 * 1024)).toFixed(2));
   } catch (error) {
-    console.error('Error descargando a buffer:', error);
-    return null;
+    console.error("Error obteniendo el tamaño del archivo:", error);
+    return 0;
   }
 };
 
-// Función para enviar como documento si el archivo es muy pesado
+
+const fetchAPI = async (url, type) => {
+  const fallbackEndpoints = {
+    audio: `https://api.neoxr.eu/api/youtube?url=${url}&type=audio&quality=128kbps&apikey=GataDios`,
+    video: `https://api.neoxr.eu/api/youtube?url=${url}&type=video&quality=720p&apikey=GataDios`,
+  };
+  const response = await fetch(fallbackEndpoints[type]);
+  return await response.json();
+};
+
+
+const compressFile = async (filePath, isAudio) => {
+  const compressedFilePath = filePath.replace(/\.[^/.]+$/, `_compressed${isAudio ? '.mp3' : '.mp4'}`);
+  const command = isAudio
+    ? `ffmpeg -i ${filePath} -b:a 128k ${compressedFilePath}`
+    : `ffmpeg -i ${filePath} -vf scale=640:360 -b:v 1000k ${compressedFilePath}`;
+  await execAsync(command);
+  return compressedFilePath;
+};
+
+
+const sendFromUrl = async (conn, chatId, url, isAudio, title, replyMsg) => {
+  const sanitizedTitle = sanitizeFilename(title);
+  const fileName = `${sanitizedTitle}.${isAudio ? 'mp3' : 'mp4'}`;
+
+  await conn.sendMessage(chatId, {
+    [isAudio ? 'audio' : 'video']: { url },
+    mimetype: isAudio ? 'audio/mpeg' : 'video/mp4',
+    fileName,
+    caption: `💙 ¡Disfruta tu ${isAudio ? 'audio' : 'video'}!`
+  }, { quoted: replyMsg });
+};
+
+
 const sendAsDocument = async (conn, chatId, filePath, isAudio, title, replyMsg) => {
-  try {
-    const sanitizedTitle = sanitizeFilename(title);
-    const fileExtension = isAudio ? 'mp3' : 'mp4';
-    const documentFileName = `${sanitizedTitle}.${fileExtension}`;
+  const sanitizedTitle = sanitizeFilename(title);
+  const fileName = `${sanitizedTitle}.${isAudio ? 'mp3' : 'mp4'}`;
+  const fileStream = fs.createReadStream(filePath);
 
-    await conn.sendMessage(chatId, {
-      document: fs.readFileSync(filePath),
-      mimetype: isAudio ? 'audio/mpeg' : 'video/mp4',
-      fileName: documentFileName,
-      caption: `💙 ${isAudio ? 'Audio' : 'Video'} descargado como documento`
-    }, { quoted: replyMsg });
-
-    return true;
-  } catch (error) {
-    console.error('Error enviando como documento:', error);
-    await conn.reply(chatId, `💙 No se pudo enviar el archivo como documento.`, replyMsg);
-    return false;
-  }
+  await conn.sendMessage(chatId, {
+    document: fileStream,
+    mimetype: isAudio ? 'audio/mpeg' : 'video/mp4',
+    fileName,
+    caption: `💙 ${isAudio ? 'Audio' : 'Video'} descargado como documento`
+  }, { quoted: replyMsg });
 };
 
-// Función principal de descarga y envío
+
 const downloadAndSendWithAPI = async (conn, chatId, replyMsg, videoId, isAudio, title) => {
   try {
     await conn.reply(chatId, `💙 Descargando ${isAudio ? 'audio' : 'video'}, por favor espera...`, replyMsg);
 
     const videoUrl = `https://youtu.be/${videoId}`;
-    const downloadUrl = await downloadWithAPI(videoUrl, isAudio);
+    const apiResponse = await fetchAPI(videoUrl, isAudio ? 'audio' : 'video');
+    const downloadUrl = apiResponse.download || apiResponse.data.url;
 
     if (!downloadUrl) {
       await conn.reply(chatId, `💙 No se pudo descargar el ${isAudio ? 'audio' : 'video'}. Intenta más tarde.`, replyMsg);
       return false;
     }
 
-    const buffer = await downloadToBuffer(downloadUrl);
-    if (!buffer) {
-      await conn.reply(chatId, `💙 El archivo descargado parece estar corrupto. Intenta más tarde.`, replyMsg);
-      return false;
-    }
+ 
+    const fileSizeMB = await getFileSize(downloadUrl);
 
-    const sanitizedTitle = sanitizeFilename(title);
-    const tempFilePath = path.join(downloadFolder, `${sanitizedTitle}.${isAudio ? 'mp3' : 'mp4'}`);
-
-    fs.writeFileSync(tempFilePath, buffer);
-
-    // Verificar tamaño del archivo
-    const stats = fs.statSync(tempFilePath);
-    const fileSizeMB = stats.size / (1024 * 1024);
-
-    let sendResult;
-    if (fileSizeMB > 16) { // Si el archivo es mayor a 16MB, enviar como documento
-      sendResult = await sendAsDocument(conn, chatId, tempFilePath, isAudio, title, replyMsg);
+    if (fileSizeMB > MAX_SIZE_MB) {
+     
+      await sendAsDocument(conn, chatId, downloadUrl, isAudio, title, replyMsg);
     } else {
-      // Envío normal como multimedia
-      try {
-        if (isAudio) {
-          sendResult = await conn.sendMessage(chatId, {
-            audio: fs.readFileSync(tempFilePath),
-            mimetype: "audio/mpeg",
-            fileName: `${sanitizedTitle}.mp3`,
-            ptt: false
-          }, { quoted: replyMsg });
-        } else {
-          sendResult = await conn.sendMessage(chatId, {
-            video: fs.readFileSync(tempFilePath),
-            caption: `💙 ¡Disfruta tu video!`,
-            mimetype: 'video/mp4',
-            fileName: `${sanitizedTitle}.mp4`
-          }, { quoted: replyMsg });
-        }
-      } catch (error) {
-        console.error('Error enviando multimedia:', error);
-        // Si falla el envío como multimedia, intentar como documento
-        sendResult = await sendAsDocument(conn, chatId, tempFilePath, isAudio, title, replyMsg);
-      }
+     
+      await sendFromUrl(conn, chatId, downloadUrl, isAudio, title, replyMsg);
     }
 
-    // Eliminar archivo temporal
-    setTimeout(() => {
-      try {
-        fs.unlinkSync(tempFilePath);
-        console.log(`Archivo eliminado: ${tempFilePath}`);
-      } catch (err) {
-        console.error(`Error al eliminar archivo: ${err}`);
-      }
-    }, 10000);
-
-    return sendResult;
+    return true;
   } catch (error) {
     console.error('Error descargando con API:', error);
     await conn.reply(chatId, `💙 Ocurrió un error al procesar tu solicitud. Intenta más tarde.`, replyMsg);
@@ -189,7 +135,7 @@ let handler = async (m, { conn, text }) => {
             + `3: Audio como Documento\n`
             + `4: Video como Documento`;
 
-    // Enviar el mensaje con la miniatura del video
+   
     let SM = await conn.sendFile(m.chat, thumbnail, 'thumbnail.jpg', txt, m);
 
     const handleOnce = new Set();
@@ -203,7 +149,6 @@ let handler = async (m, { conn, text }) => {
       const msgId = RM.key.id;
 
       if (RM.message.extendedTextMessage?.contextInfo?.stanzaId === SM.key.id && !handleOnce.has(msgId)) {
-       
         handleOnce.add(msgId);
 
         if (UR === '1') {
@@ -211,9 +156,9 @@ let handler = async (m, { conn, text }) => {
         } else if (UR === '2') {
           await downloadAndSendWithAPI(conn, UC, RM, videoId, false, title);
         } else if (UR === '3') {
-          await sendAudioDocument(conn, UC, RM, videoId, title);
+          await sendAsDocument(conn, UC, RM, videoId, true, title);
         } else if (UR === '4') {
-          await sendVideoDocument(conn, UC, RM, videoId, title);
+          await sendAsDocument(conn, UC, RM, videoId, false, title);
         } else {
           await conn.sendMessage(UC, { text: "💙 Opción inválida. Responde con 1 *(audio)*, 2 *(video)*, 3 *(audio documento)* o 4 *(video documento)*." }, { quoted: RM });
         }
@@ -229,6 +174,7 @@ handler.command = ["play"];
 handler.help = ["play <canción>"];
 handler.tags = ["downloader"];
 export default handler;
+
 
 async function search(query, options = {}) {
   let search = await yts.search({ query, hl: "es", gl: "ES", ...options });
