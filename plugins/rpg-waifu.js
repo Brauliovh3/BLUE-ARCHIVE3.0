@@ -7,20 +7,14 @@ global.db.waifu = global.db.waifu || {
     collection: {}
 };
 
-// Lista de waifus con probabilidades ajustadas
+
 const waifuList = [
     
     {
-        name: "Miku Chibi",
+        name: "Hatsune Chibi",
         rarity: "común",
         probability: 5,  
         img: "./storage/chibis/miku_chibi.png"
-    },
-    {
-        name: "Meiko Chibi",
-        rarity: "común",
-        probability: 5,  
-        img: "./storage/chibis/meiko_chibi.png"
     },
     {
         name: "Neru Chibi",
@@ -63,14 +57,8 @@ const waifuList = [
     {
         name: "Hatsune Miku 2006",
         rarity: "rara",
-        probability: 4.67,  // reducido de 6
+        probability: 4.67,  
         img: "./storage/raros/miku_raro.png"
-    },
-    {
-        name: "Sakine Meiko 2006",
-        rarity: "rara",
-        probability: 4.67,  // reducido de 6
-        img: "./storage/raros/meiko_raro.png"
     },
     {
         name: "Hatsune Miku 2006",
@@ -139,7 +127,7 @@ const waifuList = [
         name: "❤Teto❤",
         rarity: "épica",
         probability: 4.30,
-        img: "./storage/epicos/tetos_epico.png"
+        img: "./storage/epicos/teto_epico.png"
     },
     {
         name: "💗Emu💗",
@@ -164,43 +152,43 @@ const waifuList = [
     {
         name: "💙HATSUNE MIKU💙",
         rarity: "ultra rara",
-        probability: 2.4,  // aumentado de 2
+        probability: 3.4,  
         img: "./storage/ultra/miku_ultra.png"
     },
     {
         name: "💛AKITA NERU💛",
         rarity: "ultra rara",
-        probability: 2.4,
+        probability: 3.4,
         img: "./storage/ultra/neru_ultra.png"
     },
     {
         name: "💗EMU OTORI💗",
         rarity: "ultra rara",
-        probability: 2.4,
+        probability: 3.4,
         img: "./storage/ultra/emu_ultra.png"
     },
     {
         name: "❤KASANE TETO❤",
         rarity: "ultra rara",
-        probability: 2.4,
+        probability: 3.4,
         img: "./storage/ultra/teto_ultra.png"
     },
     {
         name: "💛KAGAMINE RIN💛",
         rarity: "ultra rara",
-        probability: 2.4,
+        probability: 3.4,
         img: "./storage/ultra/rin_ultra.png"
     },
     {
         name: "💥KAGAMINE LEN💢",
         rarity: "ultra rara",
-        probability: 2.4,
+        probability: 3.4,
         img: "./storage/ultra/len_ultra.png"
     },
     {
         name: "💗MEGUMIRE LUKA💮",
         rarity: "ultra rara",
-        probability: 2.4,
+        probability: 3.4,
         img: "./storage/ultra/luka_ultra.png"
     },
 
@@ -209,31 +197,31 @@ const waifuList = [
     {
         name: "💙Brazilian Miku💛",
         rarity: "Legendaria",
-        probability: 2.0,  // aumentado de 1
+        probability: 2, 
         img: "./legend/miku_legend.jpg"
     },
     {
         name: "🖤Inabakumori🖤",
         rarity: "Legendaria",
-        probability: 2.0,
+        probability: 2,
         img: "./storage/legend/ibana_legend.jpg"
     },
     {
         name: "❤KASANE TETO❤",
         rarity: "Legendaria",
-        probability: 2.0,
+        probability: 2,
         img: "./storage/legend/teto_legend.png"
     },
     {
         name: "☢️Cyberpunk Edgeruners💫",
         rarity: "Legendaria",
-        probability: 2.0,
+        probability: 2,
         img: "./storage/legend/cyber_legend.png"
     },
     {
         name: "❤️🩷VOCALOIDS💛💙",
         rarity: "Legendaria",
-        probability: 2.0,
+        probability: 2,
         img: "./storage/legend/voca_legend.jpg"
     },
     {
@@ -257,7 +245,7 @@ let handler = async (m, { conn }) => {
     const userId = m.sender;
     const currentTime = Date.now();
     
-    // Verificar cooldown
+    
     if (global.db.waifu.cooldowns[userId]) {
         const timeDiff = currentTime - global.db.waifu.cooldowns[userId];
         if (timeDiff < 900000) {
@@ -268,10 +256,10 @@ let handler = async (m, { conn }) => {
         }
     }
 
-    // Enviar mensaje de inicio
+    
     await conn.sendMessage(m.chat, { text: "💮 Invocando personaje..." });
 
-    // Generar roll y seleccionar waifu
+  
     const roll = Math.random() * 100;
     let accumulatedProb = 0;
     let selectedWaifu = null;
@@ -284,7 +272,7 @@ let handler = async (m, { conn }) => {
         }
     }
 
-    // Enviar animación según rareza
+    
     try {
         const animationPath = rarityAnimations[selectedWaifu.rarity];
         await conn.sendMessage(m.chat, { 
@@ -293,13 +281,13 @@ let handler = async (m, { conn }) => {
             gifPlayback: true
         });
 
-        // Pequeña pausa para efecto dramático
+        
         await new Promise(resolve => setTimeout(resolve, 2000));
     } catch (e) {
         console.log("Error al enviar animación:", e);
     }
 
-    // Colores según rareza
+    
     const rarityColors = {
         'común': '⚪',
         'rara': '🔵',
