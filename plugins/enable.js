@@ -1,4 +1,3 @@
-
 let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isROwner }) => {
   let isEnable = /true|enable|(turn)?on|1/i.test(command)
   let chat = global.db.data.chats[m.chat]
@@ -31,7 +30,6 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       }
       global.opts['autoread'] = isEnable
       break
-
     case 'document':
     case 'documento':
     isUser = true
@@ -57,7 +55,6 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
            }}
     chat.nsfw = isEnable          
     break
-
      case 'antiarabes':
      case 'antinegros':
        if (m.isGroup) {
@@ -74,7 +71,7 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       throw false
     }
   }
-  chat.onlyLatinos = isEnable
+  chat.onlyPeru = isEnable
   break
           case 'antilink2':
   if (m.isGroup) {
@@ -87,43 +84,43 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
   break
     default:
       if (!/[01]/.test(command)) return m.reply(`
-*💙 Ingresa una opción para habilitar o deshabilitar*
+╭━━━━━━━━━━━━━━━━━━━╮
+│ *💙 CONFIGURACIÓN DEL BOT 💙*
+╰━━━━━━━━━━━━━━━━━━━╯
 
-*≡ Lista de opciones*
-*Tipo :* welcome
-*Descripción :* Des/Activa la *Bienvenida* y *Despedida* para Grupos
+📋 *LISTA DE OPCIONES*
 
-*Tipo :* nsfw 
-*Descripción :* Des/Activa los comandos *NSFW* para Grupos
+*${usedPrefix + command}* welcome
+*↳* Des/Activa la bienvenida en grupos
+   
+*${usedPrefix + command}* nsfw
+*↳* Des/Activa los comandos +18 en grupos
+   
+*${usedPrefix + command}* antiarabes
+*↳* Des/Activa el anti-árabes en grupos
+   
+*${usedPrefix + command}* antiperuanos
+*↳* Des/Activa el anti-peruanos en grupos
+   
+*${usedPrefix + command}* antilink
+*↳* Des/Activa el anti-enlaces en grupos
+   
+*${usedPrefix + command}* antilink2
+*↳* Des/Activa el anti-enlaces-2 en grupos
+   
+*${usedPrefix + command}* autoread
+*↳* Des/Activa la lectura automática
+   
+*${usedPrefix + command}* document
+*↳* Des/Activa la descarga como documento
 
-*Tipo :* antiarabes 
-*Descripción :* Des/Activa el *AntiArabes* para Grupos
-
-*Tipo :* antiperuanos 
-*Descripción :* Des/Activa el *Antiperuanos* para Grupos
-
-*Tipo :* antilink 
-*Descripción :* Des/Activa el *AntiLink* para Grupos
-
-*Tipo :* antilink2 
-*Descripción :* Des/Activa el *AntiLinks* para Grupos
-
-*Tipo :* autoread 
-*Descripción :* Des/Activa el *AutoRead* para el Bot
-
-*Tipo :* document 
-*Descripción :* Des/Activa la *Descarga En Documentos* para el Usuario
-
-*• Ejemplo:*
-*- ${usedPrefix + command}* welcome
+*💡 Ejemplo:* ${usedPrefix + command} welcome
 `.trim())
       throw false
   }
   m.reply(`La función *${type}* se *${isEnable ? 'activó' : 'desactivó'}* ${isAll ? 'para este bot' : isUser ? '' : 'para este chat'}`)
 }
-
 handler.help = ['enable', 'disable']
 handler.tags = ['nable']
 handler.command = /^(enable|disable|on|off|1|0)$/i
-
 export default handler
