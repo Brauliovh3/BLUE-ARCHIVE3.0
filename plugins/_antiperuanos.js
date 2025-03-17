@@ -9,7 +9,7 @@ handler.before = async function (m, { conn, isAdmin, isBotAdmin, isOwner }) {
     chat = global.db.data.chats[m.chat];
   }
 
-  if (isBotAdmin && chat.onlyLatinos && !isAdmin && !isOwner) {
+  if (isBotAdmin && chat.onlyperu && !isAdmin && !isOwner) {
     let forbidPrefixes = ["51"]; // Solo expulsar usuarios peruanos
 
     for (let prefix of forbidPrefixes) {
