@@ -107,6 +107,8 @@ export async function handler(chatUpdate) {
                     bienvenida: true,
                     antiLink: false,
                     onlyLatinos: false,
+                    onlyperu: false,
+                    onlyclean: false,
                     nsfw: false, 
                     expired: 0, 
                 }
