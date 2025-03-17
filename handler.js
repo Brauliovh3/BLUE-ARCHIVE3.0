@@ -95,6 +95,8 @@ export async function handler(chatUpdate) {
                     chat.onlyLatinos = false
                 if (!('onlyperu' in chat))
                     chat.onlyperu = false
+                 if (!('onlyclean' in chat))
+                    chat.onlyclean = false
                  if (!('nsfw' in chat))
                     chat.nsfw = false
                 if (!isNumber(chat.expired))
