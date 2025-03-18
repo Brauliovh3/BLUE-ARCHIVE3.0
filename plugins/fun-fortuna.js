@@ -68,8 +68,7 @@ ${randomEmoji} ${fortune}
   conn.sendPresenceUpdate('recording', m.chat);
   setTimeout(() => {
     conn.sendPresenceUpdate('available', m.chat);
-    
-    conn.sendFile(m.chat, './media/complete.mp3', 'audio.mp3', null, m, true);
+    conn.sendFile(m.chat, './media/fortuna.mp3', 'audio.mp3', null, m, true);
   }, 2000);
 }
 
