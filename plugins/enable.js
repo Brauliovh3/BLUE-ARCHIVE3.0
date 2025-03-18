@@ -5,6 +5,12 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
   let bot = global.db.data.settings[conn.user.jid] || {}
   let type = (args[0] || '').toLowerCase()
   let isAll = false, isUser = false
+  
+ 
+  console.log(`Command executed: ${command}`)
+  console.log(`Type: ${type}`)
+  console.log(`isEnable: ${isEnable}`)
+  
   switch (type) {
     case 'welcome':
     case 'bv':
@@ -20,7 +26,6 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       }
       chat.bienvenida = isEnable
       break
-
     case 'autoread':
     case 'autoleer':
       isAll = true
@@ -30,16 +35,14 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       }
       global.opts['autoread'] = isEnable
       break
-
     case 'document':
     case 'documento':
       isUser = true
       user.useDocument = isEnable
       break
-
     case 'antitoxic':
     case 'antigroserías':
-    case 'onlyclean':
+    case 'antitoxicos':
       if (m.isGroup) {
         if (!(isAdmin || isOwner)) {
           global.dfail('admin', m, conn)
@@ -48,7 +51,6 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       }
       chat.antiToxic = isEnable
       break
-
     case 'antilink':
       if (m.isGroup) {
         if (!(isAdmin || isOwner)) {
@@ -58,7 +60,6 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       }
       chat.antiLink = isEnable
       break
-
     case 'nsfw':
     case 'modohorny':
       if (m.isGroup) {
@@ -69,7 +70,6 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       }
       chat.nsfw = isEnable
       break
-
     case 'antiarabes':
     case 'antinegros':
       if (m.isGroup) {
@@ -80,7 +80,6 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       }
       chat.onlyLatinos = isEnable
       break
-
     case 'antiperuanos':
       if (m.isGroup) {
         if (!(isAdmin || isOwner)) {
@@ -88,9 +87,8 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
           throw false
         }
       }
-      chat.onlyPeru = isEnable
+      chat.antiPeruanos = isEnable
       break
-
     case 'antilink2':
       if (m.isGroup) {
         if (!(isAdmin || isOwner)) {
@@ -100,57 +98,63 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       }
       chat.antiLink2 = isEnable
       break
-
     default:
       if (!/[01]/.test(command)) return m.reply(`
 ╭━━━━━━━━━━━━━━━━━━━━━━━╮
 │ 💙 *Hatsune Miku Configuración* 💙
 ╰━━━━━━━━━━━━━━━━━━━━━━━╯
-
 📋 *LISTA DE OPCIONES DISPONIBLES*
-
 🔹 *${usedPrefix + command} welcome*  
 ↳ Activa/Desactiva bienvenida en grupos
-
 🔹 *${usedPrefix + command} nsfw*  
 ↳ Activa/Desactiva comandos +18 en grupos
-
 🔹 *${usedPrefix + command} antiarabes*  
 ↳ Activa/Desactiva el anti-árabes en grupos
-
 🔹 *${usedPrefix + command} antiperuanos*  
 ↳ Activa/Desactiva el anti-peruanos en grupos
-
 🔹 *${usedPrefix + command} antilink*  
 ↳ Activa/Desactiva el anti-enlaces en grupos
-
 🔹 *${usedPrefix + command} antilink2*  
 ↳ Activa/Desactiva el anti-enlaces-2 en grupos
-
+🔹 *${usedPrefix + command} antitoxic*  
+↳ Activa/Desactiva el anti-groserías en grupos
 🔹 *${usedPrefix + command} autoread*  
 ↳ Activa/Desactiva la lectura automática
-
 🔹 *${usedPrefix + command} document*  
 ↳ Activa/Desactiva la descarga como documento
-
 💡 *Ejemplo:* ${usedPrefix + command} welcome
 `.trim())
       throw false
   }
 
- 
+  
+  try {
+    global.db.write()
+  } catch (e) {
+    console.error('Error saving database:', e)
+  }
+
   m.reply(`
 ╭─────❬ 💙 *Hatsune Miku* 💙 ❭─────╮
 │ 
 │ 🔹 Función: *${type}*
 │ 🔹 Estado: *${isEnable ? 'ACTIVADA ✅' : 'DESACTIVADA ❌'}*
+│ 🔹 Valor almacenado: *${m.isGroup ? (chat[type] !== undefined ? chat[type] : (
+    type === 'welcome' || type === 'bv' || type === 'bienvenida' ? chat.bienvenida :
+    type === 'antilink' ? chat.antiLink :
+    type === 'antilink2' ? chat.antiLink2 :
+    type === 'antitoxic' || type === 'antigroserías' || type === 'antitoxicos' ? chat.antiToxic :
+    type === 'antiarabes' || type === 'antinegros' ? chat.onlyLatinos :
+    type === 'antiperuanos' ? chat.antiPeruanos :
+    type === 'nsfw' || type === 'modohorny' ? chat.nsfw :
+    'desconocido'
+  )) : 'N/A'}*
 │ ${isAll ? '🌐 Aplicado globalmente' : isUser ? '👤 Aplicado al usuario' : '👥 Aplicado al grupo'}
 │ 
 │ 💙 Gracias por usar Hatsune Miku Bot
 ╰─────❬ 💙 *Hatsune Miku* 💙 ❭─────╯
 `.trim())
 }
-
 handler.help = ['enable', 'disable']
 handler.tags = ['nable']
 handler.command = /^(enable|disable|on|off|1|0)$/i
