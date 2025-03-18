@@ -84,34 +84,35 @@ export async function handler(chatUpdate) {
                 global.db.data.chats[m.chat] = {}
             if (chat) {
                 if (!('isBanned' in chat))
-                    chat.isBanned = false
-                if (!('bienvenida' in chat))
-                    chat.bienvenida = true 
-                if (!('antiLink' in chat))
-                    chat.antiLink = false
-                if (!('antilink2' in chat))
-                    chat.antilink2 = false;
-                if (!('onlyLatinos' in chat))
-                    chat.onlyLatinos = false
-                if (!('onlyperu' in chat))
-                    chat.onlyperu = false
-                 if (!('onlyclean' in chat))
-                    chat.onlyclean = false
-                 if (!('nsfw' in chat))
-                    chat.nsfw = false
-                if (!isNumber(chat.expired))
-                    chat.expired = 0
-            } else
-                global.db.data.chats[m.chat] = {
-                    isBanned: false,
-                    bienvenida: true,
-                    antiLink: false,
-                    onlyLatinos: false,
-                    onlyperu: false,
-                    onlyclean: false,
-                    nsfw: false, 
-                    expired: 0, 
-                }
+          chat.isBanned = false
+          if (!('bienvenida' in chat))
+          chat.bienvenida = true 
+          if (!('antiLink' in chat))
+          chat.antiLink = false
+          if (!('antiLink2' in chat))
+        chat.antiLink2 = false  
+         if (!('onlyLatinos' in chat))
+        chat.onlyLatinos = false
+    if (!('antiPeruanos' in chat))
+        chat.antiPeruanos = false  
+    if (!('antiToxic' in chat))
+        chat.antiToxic = false
+    if (!('nsfw' in chat))
+        chat.nsfw = false
+    if (!isNumber(chat.expired))
+        chat.expired = 0
+} else
+    global.db.data.chats[m.chat] = {
+        isBanned: false,
+        bienvenida: true,
+        antiLink: false,
+        antiLink2: false,  
+        onlyLatinos: false,
+        antiPeruanos: false,  
+        antiToxic: false, 
+        nsfw: false, 
+        expired: 0, 
+    }
             var settings = global.db.data.settings[this.user.jid]
             if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {}
             if (settings) {
