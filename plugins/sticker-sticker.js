@@ -1,4 +1,4 @@
-iimport fetch from 'node-fetch';
+import fetch from 'node-fetch';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import { processVideo, processImage, getVideoDuration, isUrl } from '../lib/ffmpeg-utils.js';
@@ -87,6 +87,6 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 
 handler.help = ['sticker', 's'];
 handler.tags = ['sticker'];
-handler.command = /^(s(tic?ker)?)$/i;
+handler.command = /^(s|sticker)$/i;
 
 export default handler;
