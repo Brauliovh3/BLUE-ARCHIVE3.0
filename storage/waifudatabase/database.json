@@ -92,6 +92,26 @@
           "name": "💗MEGUMIRE LUKA💮",
           "rarity": "ultra rara",
           "obtainedAt": "2025-03-19T01:36:50.661Z"
+        },
+        {
+          "name": "Hatsune Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-20T01:40:52.833Z"
+        },
+        {
+          "name": "Emu Otori",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-20T04:39:31.218Z"
+        },
+        {
+          "name": "💥KAGAMINE LEN💢",
+          "rarity": "ultra rara",
+          "obtainedAt": "2025-03-22T17:30:16.449Z"
+        },
+        {
+          "name": "❤Teto❤",
+          "rarity": "épica",
+          "obtainedAt": "2025-03-22T23:45:15.765Z"
         }
       ]
     },
@@ -217,6 +237,31 @@
           "name": "💙HATSUNE MIKU💙",
           "rarity": "ultra rara",
           "obtainedAt": "2025-03-19T21:32:23.237Z"
+        },
+        {
+          "name": "💛AKITA NERU💛",
+          "rarity": "ultra rara",
+          "obtainedAt": "2025-03-20T04:31:57.112Z"
+        },
+        {
+          "name": "💗EMU OTORI💗",
+          "rarity": "ultra rara",
+          "obtainedAt": "2025-03-20T21:08:10.063Z"
+        },
+        {
+          "name": "❤KASANE TETO❤",
+          "rarity": "ultra rara",
+          "obtainedAt": "2025-03-20T21:53:16.923Z"
+        },
+        {
+          "name": "💗MEGUMIRE LUKA💮",
+          "rarity": "ultra rara",
+          "obtainedAt": "2025-03-20T22:58:22.118Z"
+        },
+        {
+          "name": "💛KAGAMINE RIN💛",
+          "rarity": "ultra rara",
+          "obtainedAt": "2025-03-22T20:59:00.524Z"
         }
       ]
     },
@@ -327,6 +372,41 @@
           "name": "💗EMU OTORI💗",
           "rarity": "ultra rara",
           "obtainedAt": "2025-03-19T02:07:51.990Z"
+        },
+        {
+          "name": "💗LUKA🪷",
+          "rarity": "épica",
+          "obtainedAt": "2025-03-20T03:47:47.890Z"
+        },
+        {
+          "name": "Neru Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-20T14:54:35.533Z"
+        },
+        {
+          "name": "💙Brazilian Miku💛",
+          "rarity": "Legendaria",
+          "obtainedAt": "2025-03-20T22:59:45.302Z"
+        },
+        {
+          "name": "❤KASANE TETO❤",
+          "rarity": "ultra rara",
+          "obtainedAt": "2025-03-21T03:35:03.437Z"
+        },
+        {
+          "name": "💙HATSUNE MIKU💙",
+          "rarity": "ultra rara",
+          "obtainedAt": "2025-03-21T12:45:34.921Z"
+        },
+        {
+          "name": "💥KAGAMINE LEN💢",
+          "rarity": "ultra rara",
+          "obtainedAt": "2025-03-21T14:12:16.606Z"
+        },
+        {
+          "name": "💛AKITA NERU💛",
+          "rarity": "ultra rara",
+          "obtainedAt": "2025-03-21T16:12:22.435Z"
         }
       ]
     },
@@ -377,6 +457,16 @@
           "name": "Hatsune Chibi",
           "rarity": "común",
           "obtainedAt": "2025-03-13T01:22:02.597Z"
+        },
+        {
+          "name": "Luka Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-20T16:51:54.368Z"
+        },
+        {
+          "name": "💙Brazilian Miku💛",
+          "rarity": "Legendaria",
+          "obtainedAt": "2025-03-21T04:16:39.156Z"
         }
       ]
     },
@@ -452,6 +542,21 @@
           "name": "Len",
           "rarity": "rara",
           "obtainedAt": "2025-03-19T03:03:05.316Z"
+        },
+        {
+          "name": "Luka Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-20T02:41:24.088Z"
+        },
+        {
+          "name": "Akita Neru 2006",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-21T16:46:14.797Z"
+        },
+        {
+          "name": "❤Teto❤",
+          "rarity": "épica",
+          "obtainedAt": "2025-03-22T20:00:39.923Z"
         }
       ]
     },
@@ -527,6 +632,11 @@
           "name": "Teto",
           "rarity": "rara",
           "obtainedAt": "2025-03-16T03:01:46.138Z"
+        },
+        {
+          "name": "❤Teto❤",
+          "rarity": "épica",
+          "obtainedAt": "2025-03-21T01:57:15.230Z"
         }
       ]
     },
@@ -697,6 +807,21 @@
           "name": "💛Neru💛",
           "rarity": "épica",
           "obtainedAt": "2025-03-20T00:55:38.527Z"
+        },
+        {
+          "name": "Teto",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-20T02:58:29.381Z"
+        },
+        {
+          "name": "Rin",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-20T03:14:31.423Z"
+        },
+        {
+          "name": "💙HATSUNE MIKU💙",
+          "rarity": "ultra rara",
+          "obtainedAt": "2025-03-21T04:41:23.648Z"
         }
       ]
     },
@@ -737,6 +862,11 @@
           "name": "Teto",
           "rarity": "rara",
           "obtainedAt": "2025-03-16T22:55:29.344Z"
+        },
+        {
+          "name": "Hatsune Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-20T20:14:47.095Z"
         }
       ]
     },
@@ -912,6 +1042,26 @@
           "name": "❤Teto❤",
           "rarity": "épica",
           "obtainedAt": "2025-03-20T01:02:16.260Z"
+        },
+        {
+          "name": "Len",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-20T03:14:42.645Z"
+        },
+        {
+          "name": "Len Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-20T14:38:48.001Z"
+        },
+        {
+          "name": "Rin",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-20T16:38:41.322Z"
+        },
+        {
+          "name": "💙Brazilian Miku💛",
+          "rarity": "Legendaria",
+          "obtainedAt": "2025-03-22T22:23:40.257Z"
         }
       ]
     },
@@ -922,6 +1072,11 @@
           "name": "💙Miku💙",
           "rarity": "épica",
           "obtainedAt": "2025-03-20T00:48:22.496Z"
+        },
+        {
+          "name": "💛AKITA NERU💛",
+          "rarity": "ultra rara",
+          "obtainedAt": "2025-03-20T03:50:01.031Z"
         }
       ]
     },
@@ -932,6 +1087,146 @@
           "name": "Len",
           "rarity": "rara",
           "obtainedAt": "2025-03-20T01:09:48.317Z"
+        },
+        {
+          "name": "Luka Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-20T12:39:31.987Z"
+        }
+      ]
+    },
+    "5213334671873@s.whatsapp.net": {
+      "name": "Manuel",
+      "characters": [
+        {
+          "name": "💗LUKA🪷",
+          "rarity": "épica",
+          "obtainedAt": "2025-03-20T03:27:53.616Z"
+        },
+        {
+          "name": "Luka Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-20T03:56:44.917Z"
+        },
+        {
+          "name": "Hatsune Miku 2006",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-20T04:14:53.645Z"
+        },
+        {
+          "name": "Neru Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-20T04:39:51.792Z"
+        },
+        {
+          "name": "Len (gei)",
+          "rarity": "épica",
+          "obtainedAt": "2025-03-20T13:00:27.501Z"
+        },
+        {
+          "name": "💛Rin💛",
+          "rarity": "épica",
+          "obtainedAt": "2025-03-20T13:15:52.745Z"
+        },
+        {
+          "name": "💛AKITA NERU💛",
+          "rarity": "ultra rara",
+          "obtainedAt": "2025-03-20T21:10:07.305Z"
+        },
+        {
+          "name": "Luka Megurine 2006",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-21T00:59:51.296Z"
+        },
+        {
+          "name": "💙HATSUNE MIKU💙",
+          "rarity": "ultra rara",
+          "obtainedAt": "2025-03-21T03:36:03.222Z"
+        },
+        {
+          "name": "💙Miku💙",
+          "rarity": "épica",
+          "obtainedAt": "2025-03-21T04:35:08.842Z"
+        },
+        {
+          "name": "Len",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-21T15:16:36.490Z"
+        },
+        {
+          "name": "Hatsune Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-21T15:56:53.977Z"
+        },
+        {
+          "name": "💗EMU OTORI💗",
+          "rarity": "ultra rara",
+          "obtainedAt": "2025-03-21T19:34:28.496Z"
+        },
+        {
+          "name": "Rin Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-21T20:52:13.971Z"
+        },
+        {
+          "name": "Emu Otori",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-21T21:18:57.522Z"
+        },
+        {
+          "name": "💗Emu💗",
+          "rarity": "épica",
+          "obtainedAt": "2025-03-21T22:28:58.154Z"
+        },
+        {
+          "name": "Emu Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-22T13:44:34.090Z"
+        },
+        {
+          "name": "Len Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-22T14:45:53.343Z"
+        },
+        {
+          "name": "Teto Chibi",
+          "rarity": "común",
+          "obtainedAt": "2025-03-22T20:18:41.529Z"
+        },
+        {
+          "name": "Teto",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-22T23:24:26.575Z"
+        }
+      ]
+    },
+    "573004494084@s.whatsapp.net": {
+      "name": "🇯🇵IA Kyuri Tokashi🇯🇵",
+      "characters": [
+        {
+          "name": "Teto",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-20T04:39:34.004Z"
+        }
+      ]
+    },
+    "51922239010@s.whatsapp.net": {
+      "name": "P 🐼",
+      "characters": [
+        {
+          "name": "💗LUKA🪷",
+          "rarity": "épica",
+          "obtainedAt": "2025-03-20T21:43:34.232Z"
+        }
+      ]
+    },
+    "5214481062731@s.whatsapp.net": {
+      "name": "Marco JLC",
+      "characters": [
+        {
+          "name": "Emu Otori",
+          "rarity": "rara",
+          "obtainedAt": "2025-03-22T19:51:28.844Z"
         }
       ]
     }
