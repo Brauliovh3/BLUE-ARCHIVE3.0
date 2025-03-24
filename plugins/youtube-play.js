@@ -14,14 +14,12 @@ if (!fs.existsSync(downloadFolder)) {
   fs.mkdirSync(downloadFolder, { recursive: true });
 }
 
-
 const sanitizeFilename = (filename) => {
   return filename
     .replace(/[/\\?%*:|"<>]/g, '-') 
     .replace(/\s+/g, '_') 
     .substring(0, 100); 
 };
-
 
 const getFileSize = async (url) => {
   try {
@@ -34,7 +32,6 @@ const getFileSize = async (url) => {
   }
 };
 
-
 const fetchAPI = async (url, type) => {
   const fallbackEndpoints = {
     audio: `https://api.neoxr.eu/api/youtube?url=${url}&type=audio&quality=128kbps&apikey=GataDios`,
@@ -44,7 +41,6 @@ const fetchAPI = async (url, type) => {
   return await response.json();
 };
 
-
 const compressFile = async (filePath, isAudio) => {
   const compressedFilePath = filePath.replace(/\.[^/.]+$/, `_compressed${isAudio ? '.mp3' : '.mp4'}`);
   const command = isAudio
@@ -53,7 +49,6 @@ const compressFile = async (filePath, isAudio) => {
   await execAsync(command);
   return compressedFilePath;
 };
-
 
 const sendFromUrl = async (conn, chatId, url, isAudio, title, replyMsg) => {
   const sanitizedTitle = sanitizeFilename(title);
@@ -67,42 +62,39 @@ const sendFromUrl = async (conn, chatId, url, isAudio, title, replyMsg) => {
   }, { quoted: replyMsg });
 };
 
-
-const sendAsDocument = async (conn, chatId, filePath, isAudio, title, replyMsg) => {
+const sendAsDocument = async (conn, chatId, url, isAudio, title, replyMsg) => {
   const sanitizedTitle = sanitizeFilename(title);
   const fileName = `${sanitizedTitle}.${isAudio ? 'mp3' : 'mp4'}`;
-  const fileStream = fs.createReadStream(filePath);
 
   await conn.sendMessage(chatId, {
-    document: fileStream,
+    document: { url },
     mimetype: isAudio ? 'audio/mpeg' : 'video/mp4',
     fileName,
     caption: `💙 ${isAudio ? 'Audio' : 'Video'} descargado como documento`
   }, { quoted: replyMsg });
 };
 
-
-const downloadAndSendWithAPI = async (conn, chatId, replyMsg, videoId, isAudio, title) => {
+const downloadAndSendWithAPI = async (conn, chatId, replyMsg, videoId, isAudio, title, asDocument = false) => {
   try {
-    await conn.reply(chatId, `💙 Descargando ${isAudio ? 'audio' : 'video'}, por favor espera...`, replyMsg);
+    await conn.reply(chatId, `💙 Descargando ${isAudio ? 'audio' : 'video'}${asDocument ? ' como documento' : ''}, por favor espera...`, replyMsg);
 
     const videoUrl = `https://youtu.be/${videoId}`;
     const apiResponse = await fetchAPI(videoUrl, isAudio ? 'audio' : 'video');
-    const downloadUrl = apiResponse.download || apiResponse.data.url;
+    const downloadUrl = apiResponse.download || apiResponse.data?.url;
 
     if (!downloadUrl) {
       await conn.reply(chatId, `💙 No se pudo descargar el ${isAudio ? 'audio' : 'video'}. Intenta más tarde.`, replyMsg);
       return false;
     }
 
- 
     const fileSizeMB = await getFileSize(downloadUrl);
 
-    if (fileSizeMB > MAX_SIZE_MB) {
-     
+    if (fileSizeMB > MAX_SIZE_MB && !asDocument) {
+      await conn.reply(chatId, `💙 El archivo es demasiado grande (${fileSizeMB}MB). Se enviará como documento.`, replyMsg);
+      await sendAsDocument(conn, chatId, downloadUrl, isAudio, title, replyMsg);
+    } else if (asDocument) {
       await sendAsDocument(conn, chatId, downloadUrl, isAudio, title, replyMsg);
     } else {
-     
       await sendFromUrl(conn, chatId, downloadUrl, isAudio, title, replyMsg);
     }
 
@@ -113,7 +105,6 @@ const downloadAndSendWithAPI = async (conn, chatId, replyMsg, videoId, isAudio, 
     return false;
   }
 };
-
 
 let handler = async (m, { conn, text }) => {
   if (!text) return conn.reply(m.chat, '💙 Ingresa el nombre de la canción o video que deseas buscar.', m);
@@ -135,7 +126,6 @@ let handler = async (m, { conn, text }) => {
             + `3: Audio como Documento\n`
             + `4: Video como Documento`;
 
-   
     let SM = await conn.sendFile(m.chat, thumbnail, 'thumbnail.jpg', txt, m);
 
     const handleOnce = new Set();
@@ -156,9 +146,9 @@ let handler = async (m, { conn, text }) => {
         } else if (UR === '2') {
           await downloadAndSendWithAPI(conn, UC, RM, videoId, false, title);
         } else if (UR === '3') {
-          await sendAsDocument(conn, UC, RM, videoId, true, title);
+          await downloadAndSendWithAPI(conn, UC, RM, videoId, true, title, true);
         } else if (UR === '4') {
-          await sendAsDocument(conn, UC, RM, videoId, false, title);
+          await downloadAndSendWithAPI(conn, UC, RM, videoId, false, title, true);
         } else {
           await conn.sendMessage(UC, { text: "💙 Opción inválida. Responde con 1 *(audio)*, 2 *(video)*, 3 *(audio documento)* o 4 *(video documento)*." }, { quoted: RM });
         }
@@ -174,7 +164,6 @@ handler.command = ["play"];
 handler.help = ["play <canción>"];
 handler.tags = ["downloader"];
 export default handler;
-
 
 async function search(query, options = {}) {
   let search = await yts.search({ query, hl: "es", gl: "ES", ...options });
