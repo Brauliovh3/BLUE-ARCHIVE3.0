@@ -34,11 +34,14 @@ const getFileSize = async (url) => {
 
 const fetchAPI = async (url, type) => {
   const fallbackEndpoints = {
-    audio: `https://api.neoxr.eu/api/youtube?url=${url}&type=audio&quality=128kbps&apikey=GataDios`,
-    video: `https://api.neoxr.eu/api/youtube?url=${url}&type=video&quality=720p&apikey=GataDios`,
+    audio: `https://api.vreden.my.id/api/ytmp3?url=${url}`,
+    video: `https://api.vreden.my.id/api/ytmp4?url=${url}`,
   };
   const response = await fetch(fallbackEndpoints[type]);
-  return await response.json();
+  const data = await response.json();
+  return {
+    download: type === 'audio' ? data.result.download.url : data.result.download.url
+  };
 };
 
 const compressFile = async (filePath, isAudio) => {
@@ -80,7 +83,7 @@ const downloadAndSendWithAPI = async (conn, chatId, replyMsg, videoId, isAudio, 
 
     const videoUrl = `https://youtu.be/${videoId}`;
     const apiResponse = await fetchAPI(videoUrl, isAudio ? 'audio' : 'video');
-    const downloadUrl = apiResponse.download || apiResponse.data?.url;
+    const downloadUrl = apiResponse.download;
 
     if (!downloadUrl) {
       await conn.reply(chatId, `💙 No se pudo descargar el ${isAudio ? 'audio' : 'video'}. Intenta más tarde.`, replyMsg);
