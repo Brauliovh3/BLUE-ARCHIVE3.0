@@ -33,8 +33,8 @@ const defaultMenu = {
 
 ╭── ︿︿︿︿︿ *⭒   ⭒   ⭒   ⭒   ⭒   ⭒*
 ┊ ‹‹ *Hello* :: *%name*
-┊01*⁀➷ °⭒⭒⭒ *💙HATSUNE MIKU CHANNEL💙*
-╰─── ︶︶︶︶ 💙  ⌇ *⭒ ⭒ ⭒*   ˚̩̥̩̥*̩̩͙💙
+┊01 *💙HATSUNE MIKU CHANNEL💙*
+╰─── 💙 Hatsune Miku 💙
 ┊B [ *Modo* :: *Público*
 ┊V [ *Baileys* :: *Multi Device*
 ┊H [ *Tiempo Activo* :: *%muptime*
