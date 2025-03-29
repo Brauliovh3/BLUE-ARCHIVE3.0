@@ -15,7 +15,7 @@ else global.conns = []
 
 let handler = async (m, { conn: star, args, usedPrefix, command, isOwner }) => {
   let parent = args[0] && args[0] == 'plz' ? global.conn : await global.conn
-  if (!((args[0] && args[0] == 'plz') || (await global.conn).user.jid == _conn.user.jid)) {
+  if (!((args[0] && args[0] == 'plz') || (await global.conn).user.jid == global.conn.user.jid)) {
 	return m.reply(`Este comando solo puede ser usado en el bot principal! wa.me/${global.conn.user.jid.split`@`[0]}?text=${usedPrefix}code`)
 }
 
