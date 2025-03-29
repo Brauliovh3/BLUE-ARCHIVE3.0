@@ -89,8 +89,13 @@ export async function handler(chatUpdate) {
                     chat.bienvenida = true 
                 if (!('antiLink' in chat))
                     chat.antiLink = false
+                if (!('antiLink2' in chat))
+                    chat.antiLink2 = false
                 if (!('onlyLatinos' in chat))
                     chat.onlyLatinos = false
+                if (!('antiPeruanos' in chat))
+                    chat.antiPeruanos = false  
+                if (!('antiToxic' in chat))
                  if (!('nsfw' in chat))
                     chat.nsfw = false
                 if (!isNumber(chat.expired))
@@ -100,7 +105,10 @@ export async function handler(chatUpdate) {
                     isBanned: false,
                     bienvenida: true,
                     antiLink: false,
+                    antiLink2: false,
                     onlyLatinos: false,
+                    antiPeruanos: false,  
+                    antiToxic: false,
                     nsfw: false, 
                     expired: 0, 
                 }
