@@ -12,21 +12,21 @@ let text = `
 ╭───═[ 💙 *Top ${len} 🌱 Cebollines* 💙 ]═────⋆
 │╭───────────────···
 0│ Tú eres el *${usersLim.indexOf(m.sender) + 1}* de *${usersLim.length}*
-1│ ${sortedLim.slice(0, len).map(({ jid, limit }, i) => `${i + 1}. ${participants.some(p => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *${limit} 🌱*`).join`\n✩│ `}
+1│ ${sortedLim.slice(0, len).map(({ jid, limit }, i) => `${i + 1}. ${participants.some(p => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *${limit} 🌱*`).join`\n💙│ `}
 │╰────────────────···
 ╰───────────═┅═──────────
 
 ╭───═[ 💙 *TOP ${len} XP 💫* 💙 ]═────⋆
 │╭───────────────···
 0│ Tú eres el *${usersLim.indexOf(m.sender) + 1}* de *${usersLim.length}*
-1│ ${sortedExp.slice(0, len).map(({ jid, exp }, i) => `${i + 1}. ${participants.some(p => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *${exp} 💫*`).join`\n✩│ `}
+1│ ${sortedExp.slice(0, len).map(({ jid, exp }, i) => `${i + 1}. ${participants.some(p => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *${exp} 💫*`).join`\n💙│ `}
 │╰────────────────···
 ╰───────────═┅═──────────
 
 ╭───═[ 💙 *Top ${len} Nivel 📈* 💙 ]═────⋆
 │╭───────────────···
 0│ Tú eres el *${usersLim.indexOf(m.sender) + 1}* de *${usersLim.length}*
-1│ ${sortedLevel.slice(0, len).map(({ jid, level }, i) => `${i + 1}. ${participants.some(p => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *Nivel ${level} 📈*`).join`\n✩│ `}
+1│ ${sortedLevel.slice(0, len).map(({ jid, level }, i) => `${i + 1}. ${participants.some(p => jid === p.jid) ? `(${conn.getName(jid)}) wa.me/` : '@'}${jid.split`@`[0]} *Nivel ${level} 📈*`).join`\n💙│ `}
 │╰────────────────···
 ╰───────────═┅═──────────`.trim()
   m.reply(text, null, { mentions: conn.parseMention(text) })
