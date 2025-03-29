@@ -1,114 +1,174 @@
-import fetch from 'node-fetch'
-import yts from 'yt-search'
+import fetch from 'node-fetch';
+import yts from 'yt-search';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+import fs from 'fs';
+import path from 'path';
+import axios from 'axios';
 
-let handler = async (m, { conn: star, command, args, text, usedPrefix }) => {
-  if (!text) return m.reply('💙 Ingresa el título de un video o canción de *YouTube*.\n\n`Ejemplo:`\n' + `> *${usedPrefix + command}* Senbonzakura Hatsune Miku`)
-    await m.react('🕓')
-    try {
-    let res = await search(args.join(" "))
-    let img = await (await fetch(`${res[0].image}`)).buffer()
-    let txt = '`💙  Y O U T U B E  -  P L A Y  💙`\n\n'
-       txt += `\t\t*🎤 Título* : ${res[0].title}\n`
-       txt += `\t\t*🎤 Duración* : ${secondString(res[0].duration.seconds)}\n`
-       txt += `\t\t*🎤 Publicado* : ${eYear(res[0].ago)}\n`
-       txt += `\t\t*🎤 Canal* : ${res[0].author.name || 'Desconocido'}\n`
-       txt += `\t\t*🎤 ID* : ${res[0].videoId}\n`
-       txt += `\t\t*🎤 Url* : ${'https://youtu.be/' + res[0].videoId}\n\n`
-       txt += `> *-* 🌱 Para descargar responde a este mensaje con *Video* o *Audio*.`
-await star.sendFile(m.chat, img, 'thumbnail.jpg', txt, m)
-await m.react('✅')
-} catch {
-await m.react('✖️')
-}}
-handler.help = ['play *<búsqueda>*']
-handler.tags = ['downloader']
-handler.command = ['play']
-handler.register = true 
-export default handler
+const execAsync = promisify(exec);
+const downloadFolder = './descargas'; 
+const MAX_SIZE_MB = 100; 
+
+if (!fs.existsSync(downloadFolder)) {
+  fs.mkdirSync(downloadFolder, { recursive: true });
+}
+
+const sanitizeFilename = (filename) => {
+  return filename
+    .replace(/[/\\?%*:|"<>]/g, '-') 
+    .replace(/\s+/g, '_') 
+    .substring(0, 100); 
+};
+
+const getFileSize = async (url) => {
+  try {
+    const response = await axios.head(url);
+    const sizeInBytes = response.headers['content-length'] || 0;
+    return parseFloat((sizeInBytes / (1024 * 1024)).toFixed(2));
+  } catch (error) {
+    console.error("Error obteniendo el tamaño del archivo:", error);
+    return 0;
+  }
+};
+
+const fetchAPI = async (url, type) => {
+  const fallbackEndpoints = {
+    audio: `https://api.vreden.my.id/api/ytmp3?url=${url}`,
+    video: `https://api.vreden.my.id/api/ytmp4?url=${url}`,
+  };
+  const response = await fetch(fallbackEndpoints[type]);
+  const data = await response.json();
+  return {
+    download: type === 'audio' ? data.result.download.url : data.result.download.url
+  };
+};
+
+const compressFile = async (filePath, isAudio) => {
+  const compressedFilePath = filePath.replace(/\.[^/.]+$/, `_compressed${isAudio ? '.mp3' : '.mp4'}`);
+  const command = isAudio
+    ? `ffmpeg -i ${filePath} -b:a 128k ${compressedFilePath}`
+    : `ffmpeg -i ${filePath} -vf scale=640:360 -b:v 1000k ${compressedFilePath}`;
+  await execAsync(command);
+  return compressedFilePath;
+};
+
+const sendFromUrl = async (conn, chatId, url, isAudio, title, replyMsg) => {
+  const sanitizedTitle = sanitizeFilename(title);
+  const fileName = `${sanitizedTitle}.${isAudio ? 'mp3' : 'mp4'}`;
+
+  await conn.sendMessage(chatId, {
+    [isAudio ? 'audio' : 'video']: { url },
+    mimetype: isAudio ? 'audio/mpeg' : 'video/mp4',
+    fileName,
+    caption: `💙 ¡Disfruta tu ${isAudio ? 'audio' : 'video'}!`
+  }, { quoted: replyMsg });
+};
+
+const sendAsDocument = async (conn, chatId, url, isAudio, title, replyMsg) => {
+  const sanitizedTitle = sanitizeFilename(title);
+  const fileName = `${sanitizedTitle}.${isAudio ? 'mp3' : 'mp4'}`;
+
+  await conn.sendMessage(chatId, {
+    document: { url },
+    mimetype: isAudio ? 'audio/mpeg' : 'video/mp4',
+    fileName,
+    caption: `💙 ${isAudio ? 'Audio' : 'Video'} descargado como documento`
+  }, { quoted: replyMsg });
+};
+
+const downloadAndSendWithAPI = async (conn, chatId, replyMsg, videoId, isAudio, title, asDocument = false) => {
+  try {
+    await conn.reply(chatId, `💙 Descargando ${isAudio ? 'audio' : 'video'}${asDocument ? ' como documento' : ''}, por favor espera...`, replyMsg);
+
+    const videoUrl = `https://youtu.be/${videoId}`;
+    const apiResponse = await fetchAPI(videoUrl, isAudio ? 'audio' : 'video');
+    const downloadUrl = apiResponse.download;
+
+    if (!downloadUrl) {
+      await conn.reply(chatId, `💙 No se pudo descargar el ${isAudio ? 'audio' : 'video'}. Intenta más tarde.`, replyMsg);
+      return false;
+    }
+
+    const fileSizeMB = await getFileSize(downloadUrl);
+
+    if (fileSizeMB > MAX_SIZE_MB && !asDocument) {
+      await conn.reply(chatId, `💙 El archivo es demasiado grande (${fileSizeMB}MB). Se enviará como documento.`, replyMsg);
+      await sendAsDocument(conn, chatId, downloadUrl, isAudio, title, replyMsg);
+    } else if (asDocument) {
+      await sendAsDocument(conn, chatId, downloadUrl, isAudio, title, replyMsg);
+    } else {
+      await sendFromUrl(conn, chatId, downloadUrl, isAudio, title, replyMsg);
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error descargando con API:', error);
+    await conn.reply(chatId, `💙 Ocurrió un error al procesar tu solicitud. Intenta más tarde.`, replyMsg);
+    return false;
+  }
+};
+
+let handler = async (m, { conn, text }) => {
+  if (!text) return conn.reply(m.chat, '💙 Ingresa el nombre de la canción o video que deseas buscar.', m);
+
+  try {
+    let res = await search(text);
+    if (!res || res.length === 0) return conn.reply(m.chat, '💙 No se encontraron resultados para tu búsqueda.', m);
+
+    const { title, thumbnail, timestamp, views, ago, videoId } = res[0];
+
+    let txt = `💙 [ YOUTUBE - PLAY ] 💙\n\n`
+            + `💙 *Título:* ${title}\n`
+            + `💙 *Duración:* ${timestamp}\n`
+            + `💙 *Visitas:* ${views}\n`
+            + `💙 *Subido:* ${ago}\n\n`
+            + `💙 *Responde a este mensaje con:*\n`
+            + `1: Audio\n`
+            + `2: Video\n`
+            + `3: Audio como Documento\n`
+            + `4: Video como Documento`;
+
+    let SM = await conn.sendFile(m.chat, thumbnail, 'thumbnail.jpg', txt, m);
+
+    const handleOnce = new Set();
+
+    conn.ev.on("messages.upsert", async (upsertedMessage) => {
+      let RM = upsertedMessage.messages[0];
+      if (!RM.message) return;
+
+      const UR = RM.message.conversation || RM.message.extendedTextMessage?.text;
+      let UC = RM.key.remoteJid;
+      const msgId = RM.key.id;
+
+      if (RM.message.extendedTextMessage?.contextInfo?.stanzaId === SM.key.id && !handleOnce.has(msgId)) {
+        handleOnce.add(msgId);
+
+        if (UR === '1') {
+          await downloadAndSendWithAPI(conn, UC, RM, videoId, true, title);
+        } else if (UR === '2') {
+          await downloadAndSendWithAPI(conn, UC, RM, videoId, false, title);
+        } else if (UR === '3') {
+          await downloadAndSendWithAPI(conn, UC, RM, videoId, true, title, true);
+        } else if (UR === '4') {
+          await downloadAndSendWithAPI(conn, UC, RM, videoId, false, title, true);
+        } else {
+          await conn.sendMessage(UC, { text: "💙 Opción inválida. Responde con 1 *(audio)*, 2 *(video)*, 3 *(audio documento)* o 4 *(video documento)*." }, { quoted: RM });
+        }
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    conn.reply(m.chat, '💙 Ocurrió un error al procesar tu solicitud.', m);
+  }
+};
+
+handler.command = ["play"];
+handler.help = ["play <canción>"];
+handler.tags = ["downloader"];
+export default handler;
 
 async function search(query, options = {}) {
-  let search = await yts.search({ query, hl: "es", gl: "ES", ...options })
-  return search.videos
-}
-
-function MilesNumber(number) {
-  let exp = /(\d)(?=(\d{3})+(?!\d))/g
-  let rep = "$1."
-  let arr = number.toString().split(".")
-  arr[0] = arr[0].replace(exp, rep)
-  return arr[1] ? arr.join(".") : arr[0]
-}
-
-function secondString(seconds) {
-  seconds = Number(seconds);
-  const d = Math.floor(seconds / (3600 * 24));
-  const h = Math.floor((seconds % (3600 * 24)) / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = Math.floor(seconds % 60);
-  const dDisplay = d > 0 ? d + (d == 1 ? ' Día, ' : ' Días, ') : '';
-  const hDisplay = h > 0 ? h + (h == 1 ? ' Hora, ' : ' Horas, ') : '';
-  const mDisplay = m > 0 ? m + (m == 1 ? ' Minuto, ' : ' Minutos, ') : '';
-  const sDisplay = s > 0 ? s + (s == 1 ? ' Segundo' : ' Segundos') : '';
-  return dDisplay + hDisplay + mDisplay + sDisplay;
-}
-
-function sNum(num) {
-    return new Intl.NumberFormat('en-GB', { notation: "compact", compactDisplay: "short" }).format(num)
-}
-
-function eYear(txt) {
-    if (!txt) {
-        return '×'
-    }
-    if (txt.includes('month ago')) {
-        var T = txt.replace("month ago", "").trim()
-        var L = 'hace '  + T + ' mes'
-        return L
-    }
-    if (txt.includes('months ago')) {
-        var T = txt.replace("months ago", "").trim()
-        var L = 'hace ' + T + ' meses'
-        return L
-    }
-    if (txt.includes('year ago')) {
-        var T = txt.replace("year ago", "").trim()
-        var L = 'hace ' + T + ' año'
-        return L
-    }
-    if (txt.includes('years ago')) {
-        var T = txt.replace("years ago", "").trim()
-        var L = 'hace ' + T + ' años'
-        return L
-    }
-    if (txt.includes('hour ago')) {
-        var T = txt.replace("hour ago", "").trim()
-        var L = 'hace ' + T + ' hora'
-        return L
-    }
-    if (txt.includes('hours ago')) {
-        var T = txt.replace("hours ago", "").trim()
-        var L = 'hace ' + T + ' horas'
-        return L
-    }
-    if (txt.includes('minute ago')) {
-        var T = txt.replace("minute ago", "").trim()
-        var L = 'hace ' + T + ' minuto'
-        return L
-    }
-    if (txt.includes('minutes ago')) {
-        var T = txt.replace("minutes ago", "").trim()
-        var L = 'hace ' + T + ' minutos'
-        return L
-    }
-    if (txt.includes('day ago')) {
-        var T = txt.replace("day ago", "").trim()
-        var L = 'hace ' + T + ' dia'
-        return L
-    }
-    if (txt.includes('days ago')) {
-        var T = txt.replace("days ago", "").trim()
-        var L = 'hace ' + T + ' dias'
-        return L
-    }
-    return txt
+  let search = await yts.search({ query, hl: "es", gl: "ES", ...options });
+  return search.videos;
 }
