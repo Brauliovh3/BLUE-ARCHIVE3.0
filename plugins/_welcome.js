@@ -8,7 +8,7 @@ export async function before(m, {conn, participants, groupMetadata}) {
   let chat = global.db.data.chats[m.chat]
 
   if (chat.bienvenida && m.messageStubType == 27) {
-    let bienvenida = `💙━━⊱ *${botname}* ⊰━━💙 \n🌟 *¡Bienvenid@!* 🌟\n🎤 *Usuario:@${m.messageStubParameters[0].split`@`[0]} \n   🎶 *Grupo:\n 💙 *¡Que la música te acompañe!* 🎵  ${groupMetadata.subject}\n   💙━━⊱【01】⊰━━💙`
+    let bienvenida = `💙━━⊱ *${botname}* ⊰━━💙 \n🌟 *¡Bienvenid@!* 🌟\n🎤 *Usuario:@${m.messageStubParameters[0].split`@`[0]} \n  🎶 *Grupo: ${groupMetadata.subject}\n💙 *¡Que la música te acompañe!* 🎵 \n   💙━━⊱【01】⊰━━💙`
     
 await conn.sendAi(m.chat, botname, textbot, bienvenida, img, img, canal, estilo)
   }
