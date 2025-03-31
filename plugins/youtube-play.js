@@ -33,15 +33,113 @@ const getFileSize = async (url) => {
 };
 
 const fetchAPI = async (url, type) => {
-  const fallbackEndpoints = {
-    audio: `https://api.vreden.my.id/api/ytmp3?url=${url}`,
-    video: `https://api.vreden.my.id/api/ytmp4?url=${url}`,
-  };
-  const response = await fetch(fallbackEndpoints[type]);
-  const data = await response.json();
-  return {
-    download: type === 'audio' ? data.result.download.url : data.result.download.url
-  };
+  
+  const audioEndpoints = [
+    {
+      url: async () => {
+        const response = await fetch(`https://api.vreden.my.id/api/ytmp3?url=${url}`);
+        const data = await response.json();
+        return data;
+      },
+      extract: (data) => data.result.download.url
+    },
+    {
+      url: async () => {
+        const response = await fetch(`https://api.siputzx.my.id/api/d/ytmp3?url=${url}`);
+        const data = await response.json();
+        return data;
+      },
+      extract: (data) => data.dl
+    },
+    {
+      url: async () => {
+        const response = await fetch(`https://api.neoxr.eu/api/youtube?url=${url}&type=audio&apikey=GataDios`);
+        const data = await response.json();
+        return data;
+      },
+      extract: (data) => data.data.url
+    },
+    {
+      url: async () => {
+        const response = await fetch(`${global.APIs?.fgmods?.url || 'https://api-fgmods.ddns.net'}/downloader/ytmp3?url=${url}&apikey=${global.APIs?.fgmods?.key || 'fg-dylux'}`);
+        const data = await response.json();
+        return data;
+      },
+      extract: (data) => data.result?.dl_url
+    }
+  ];
+
+  
+  const videoEndpoints = [
+    {
+      url: async () => {
+        const response = await fetch(`https://api.vreden.my.id/api/ytmp4?url=${url}`);
+        const data = await response.json();
+        return data;
+      },
+      extract: (data) => data.result.download.url
+    },
+    {
+      url: async () => {
+        const response = await fetch(`https://api.siputzx.my.id/api/d/ytmp4?url=${url}`);
+        const data = await response.json();
+        return data;
+      },
+      extract: (data) => data.dl
+    },
+    {
+      url: async () => {
+        const response = await fetch(`https://api.neoxr.eu/api/youtube?url=${url}&type=video&quality=720p&apikey=GataDios`);
+        const data = await response.json();
+        return data;
+      },
+      extract: (data) => data.data.url
+    },
+    {
+      url: async () => {
+        const response = await fetch(`${global.APIs?.fgmods?.url || 'https://api-fgmods.ddns.net'}/downloader/ytmp4?url=${url}&apikey=${global.APIs?.fgmods?.key || 'fg-dylux'}`);
+        const data = await response.json();
+        return data;
+      },
+      extract: (data) => data.result?.dl_url
+    },
+    {
+      url: async () => {
+        const response = await fetch(`${global.APIs?.apis || 'https://api.boxmine.xyz'}/download/ytmp4?url=${url}`);
+        const data = await response.json();
+        return data;
+      },
+      extract: (data) => data.status ? data.data.download.url : null
+    },
+    {
+      url: async () => {
+        const response = await fetch(`https://exonity.tech/api/ytdlp2-faster?apikey=adminsepuh&url=${url}`);
+        const data = await response.json();
+        return data;
+      },
+      extract: (data) => data.result?.media?.mp4
+    }
+  ];
+
+  const endpoints = type === 'audio' ? audioEndpoints : videoEndpoints;
+
+  
+  for (const endpoint of endpoints) {
+    try {
+      const data = await endpoint.url();
+      const downloadUrl = endpoint.extract(data);
+      
+      if (downloadUrl) {
+        return { download: downloadUrl };
+      }
+    } catch (error) {
+      console.error(`Error con endpoint:`, error);
+      
+    }
+  }
+
+ 
+  return { download: null };
 };
 
 const compressFile = async (filePath, isAudio) => {
@@ -130,6 +228,9 @@ let handler = async (m, { conn, text }) => {
             + `4: Video como Documento`;
 
     let SM = await conn.sendFile(m.chat, thumbnail, 'thumbnail.jpg', txt, m);
+    
+    
+    await conn.sendMessage(m.chat, { react: { text: '🎤', key: SM.key } });
 
     const handleOnce = new Set();
 
@@ -143,17 +244,25 @@ let handler = async (m, { conn, text }) => {
 
       if (RM.message.extendedTextMessage?.contextInfo?.stanzaId === SM.key.id && !handleOnce.has(msgId)) {
         handleOnce.add(msgId);
+        
+        
+        await conn.sendMessage(UC, { react: { text: '⏳', key: RM.key } });
 
         if (UR === '1') {
           await downloadAndSendWithAPI(conn, UC, RM, videoId, true, title);
+          await conn.sendMessage(UC, { react: { text: '🎵', key: RM.key } });
         } else if (UR === '2') {
           await downloadAndSendWithAPI(conn, UC, RM, videoId, false, title);
+          await conn.sendMessage(UC, { react: { text: '🎬', key: RM.key } });
         } else if (UR === '3') {
           await downloadAndSendWithAPI(conn, UC, RM, videoId, true, title, true);
+          await conn.sendMessage(UC, { react: { text: '📎', key: RM.key } });
         } else if (UR === '4') {
           await downloadAndSendWithAPI(conn, UC, RM, videoId, false, title, true);
+          await conn.sendMessage(UC, { react: { text: '📎', key: RM.key } });
         } else {
           await conn.sendMessage(UC, { text: "💙 Opción inválida. Responde con 1 *(audio)*, 2 *(video)*, 3 *(audio documento)* o 4 *(video documento)*." }, { quoted: RM });
+          await conn.sendMessage(UC, { react: { text: '❌', key: RM.key } });
         }
       }
     });
