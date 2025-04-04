@@ -14,11 +14,16 @@ let format = sizeFormatter({
 let handler = async (m, { conn, usedPrefix }) => {
    let uniqueUsers = new Map()
 
+   // Fix: Initialize global.conns as an empty array if it doesn't exist
+   global.conns = global.conns || []
+   
+   // Use the initialized array
    global.conns.forEach((conn) => {
-     if (conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED) {
+     if (conn && conn.user && conn.ws && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED) {
        uniqueUsers.set(conn.user.jid, conn)
      }
    })
+   
    let users = [...uniqueUsers.values()]
    let totalUsers = users.length
    let totalreg = Object.keys(global.db.data.users).length
@@ -55,7 +60,7 @@ let handler = async (m, { conn, usedPrefix }) => {
          irq: 0
       }
    })
-   	let _muptime
+   let _muptime
     if (process.send) {
       process.send('uptime')
       _muptime = await new Promise(resolve => {
@@ -66,11 +71,15 @@ let handler = async (m, { conn, usedPrefix }) => {
     let muptime = clockString(_muptime)
    let timestamp = speed()
    let latensi = speed() - timestamp
+   
+   // Define textbot or use a default value if it doesn't exist
+   let textbot = global.textbot || '¡Gracias por usar Hatsune Miku Bot!'
+   
    let txt = '`*⭒─ׄ─ׅ─ׄ─⭒ Info Bot ⭒─ׄ─ׅ─ׄ─⭒*`\n\n'
-       txt += `╭── ︿︿︿︿︿ *⭒   ⭒   ⭒   ⭒   ⭒   ⭒*\n`
+       txt += `╭── ︿︿︿︿︿ *⭒   ⭒   ⭒   ⭒   ⭒   ⭒*\n`
        txt += `┊ ‹‹ *Status De* :: *💙HATSUNE MIKU💙*\n`
-       txt += `┊•*⁀➷ °⭒⭒⭒ *💙HATSUNE MIKU CHANNEL💙*\n`
-       txt += `╰─── ︶︶︶︶ 💙  ⌇ *⭒ ⭒ ⭒*   ˚̩̥̩̥*̩̩͙🌱\n`
+       txt += `┊•*💙HATSUNE MIKU CHANNEL💙*\n`
+       txt += `╰─── 💙  ⌇ DEPOOL   ˚̩̥̩̥*̩̩͙🌱\n`
        txt += `┊🪴 [ *Moneda* :: *🌱 Cebollines*\n`
        txt += `┊🍟 [ *Prefijo* :: *【  ${usedPrefix}  】*\n`
        txt += `┊✨ [ *Plugins* :: *${totalf}*\n`
@@ -85,8 +94,22 @@ let handler = async (m, { conn, usedPrefix }) => {
        txt += `╰─────────\n\n`
        txt += `> 💙 ${textbot}`
 
-let img = `./storage/img/menu.jpg`
-await conn.sendFile(m.chat, img, 'thumbnail.jpg', txt, m, null, rcanal)
+   // Fix for the mimetype error: Check if the file exists or use a different approach
+   try {
+     const fs = await import('fs')
+     const path = './storage/img/menu.jpg'
+     
+     if (fs.existsSync(path)) {
+       await conn.sendFile(m.chat, path, 'thumbnail.jpg', txt, m)
+     } else {
+       // If the file doesn't exist, just send the text
+       await conn.reply(m.chat, txt, m)
+     }
+   } catch (error) {
+     // Fallback if there's any error
+     await conn.reply(m.chat, txt, m)
+     console.log('Error sending file:', error)
+   }
 }
 handler.help = ['info']
 handler.tags = ['main']
