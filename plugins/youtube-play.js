@@ -13,7 +13,7 @@ const downloadFolder = './descargas';
 const MAX_SIZE_MB = 100; 
 
 
-const FORCE_DOCUMENT = true;
+const FORCE_DOCUMENT = false;
 
 if (!fs.existsSync(downloadFolder)) {
   fs.mkdirSync(downloadFolder, { recursive: true });
@@ -37,7 +37,6 @@ const getFileSize = async (url) => {
   }
 };
 
-
 const downloadFileToLocal = async (url, filePath) => {
   try {
     const response = await axios({
@@ -55,7 +54,6 @@ const downloadFileToLocal = async (url, filePath) => {
 };
 
 const fetchAPI = async (url, type) => {
-  
   const audioEndpoints = [
     {
       url: async () => {
@@ -91,9 +89,7 @@ const fetchAPI = async (url, type) => {
     }
   ];
 
- 
   const videoEndpoints = [
-   
     {
       url: async () => {
         const response = await fetch(`https://api.neoxr.eu/api/youtube?url=${url}&type=video&quality=360p&apikey=GataDios`);
@@ -145,7 +141,6 @@ const fetchAPI = async (url, type) => {
   ];
 
   const endpoints = type === 'audio' ? audioEndpoints : videoEndpoints;
-
   
   for (const endpoint of endpoints) {
     try {
@@ -157,23 +152,17 @@ const fetchAPI = async (url, type) => {
       }
     } catch (error) {
       console.error(`Error con endpoint:`, error);
-      
     }
   }
-
   
   return { download: null };
 };
 
-const sendFromUrl = async (conn, chatId, url, isAudio, title, replyMsg) => {
+
+const sendAsAudio = async (conn, chatId, url, title, replyMsg) => {
   try {
     const sanitizedTitle = sanitizeFilename(title);
-    const fileName = `${sanitizedTitle}.${isAudio ? 'mp3' : 'mp4'}`;
-    
-    
-    if (!isAudio || FORCE_DOCUMENT) {
-      return await sendAsDocument(conn, chatId, url, isAudio, title, replyMsg);
-    }
+    const fileName = `${sanitizedTitle}.mp3`;
     
     await conn.sendMessage(chatId, {
       audio: { url },
@@ -184,17 +173,30 @@ const sendFromUrl = async (conn, chatId, url, isAudio, title, replyMsg) => {
     
     return true;
   } catch (error) {
-    console.error("Error enviando archivo:", error);
+    console.error("Error enviando audio:", error);
+    await conn.reply(chatId, `💙 Hubo un problema enviando el audio. Intenta más tarde.`, replyMsg);
+    return false;
+  }
+};
+
+
+const sendAsVideo = async (conn, chatId, url, title, replyMsg) => {
+  try {
+    const sanitizedTitle = sanitizeFilename(title);
+    const fileName = `${sanitizedTitle}.mp4`;
     
+    await conn.sendMessage(chatId, {
+      video: { url },
+      mimetype: 'video/mp4',
+      fileName,
+      caption: `💙 ¡Disfruta tu video!`
+    }, { quoted: replyMsg });
     
-    try {
-      await conn.reply(chatId, `💙 Hubo un problema, intentando enviar como documento...`, replyMsg);
-      return await sendAsDocument(conn, chatId, url, isAudio, title, replyMsg);
-    } catch (docError) {
-      console.error("Error enviando documento:", docError);
-      await conn.reply(chatId, `💙 No se pudo enviar el archivo. Intenta más tarde.`, replyMsg);
-      return false;
-    }
+    return true;
+  } catch (error) {
+    console.error("Error enviando video:", error);
+    await conn.reply(chatId, `💙 Hubo un problema enviando el video. Intenta más tarde.`, replyMsg);
+    return false;
   }
 };
 
@@ -204,16 +206,13 @@ const sendAsDocument = async (conn, chatId, url, isAudio, title, replyMsg) => {
   const filePath = path.join(downloadFolder, fileName);
 
   try {
-    
     await conn.reply(chatId, `💙 Preparando ${isAudio ? 'audio' : 'video'} como documento...`, replyMsg);
     
-   
     await downloadFileToLocal(url, filePath);
     
     if (!fs.existsSync(filePath) || fs.statSync(filePath).size === 0) {
       throw new Error("Archivo descargado vacío o corrupto");
     }
-    
     
     await conn.sendMessage(chatId, {
       document: fs.readFileSync(filePath),
@@ -221,7 +220,6 @@ const sendAsDocument = async (conn, chatId, url, isAudio, title, replyMsg) => {
       fileName,
       caption: `💙 ${isAudio ? 'Audio' : 'Video'} descargado como documento`
     }, { quoted: replyMsg });
-    
     
     fs.unlink(filePath, (err) => {
       if (err) console.error("Error eliminando archivo temporal:", err);
@@ -231,9 +229,10 @@ const sendAsDocument = async (conn, chatId, url, isAudio, title, replyMsg) => {
   } catch (error) {
     console.error("Error enviando documento:", error);
     
-    
     try {
-      fs.unlinkSync(filePath); 
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
       
       await conn.sendMessage(chatId, {
         document: { url },
@@ -251,16 +250,23 @@ const sendAsDocument = async (conn, chatId, url, isAudio, title, replyMsg) => {
   }
 };
 
-const downloadAndSendWithAPI = async (conn, chatId, replyMsg, videoId, isAudio, title, asDocument = false) => {
+const downloadAndSend = async (conn, chatId, replyMsg, videoId, option, title) => {
   try {
-    await conn.reply(chatId, `💙 Descargando ${isAudio ? 'audio' : 'video'}${asDocument ? ' como documento' : ''}, por favor espera...`, replyMsg);
+    const isAudio = option === 1 || option === 3;
+    const asDocument = option === 3 || option === 4;
+    
+    const messageType = isAudio ? 'audio' : 'video';
+    const format = isAudio ? 'MP3' : 'MP4';
+    const documentText = asDocument ? ' como documento' : '';
+    
+    await conn.reply(chatId, `💙 Descargando ${messageType} (${format})${documentText}, por favor espera...`, replyMsg);
 
     const videoUrl = `https://youtu.be/${videoId}`;
     const apiResponse = await fetchAPI(videoUrl, isAudio ? 'audio' : 'video');
     const downloadUrl = apiResponse.download;
 
     if (!downloadUrl) {
-      await conn.reply(chatId, `💙 No se pudo descargar el ${isAudio ? 'audio' : 'video'}. Intenta más tarde.`, replyMsg);
+      await conn.reply(chatId, `💙 No se pudo descargar el ${messageType}. Intenta más tarde.`, replyMsg);
       return false;
     }
 
@@ -272,11 +278,20 @@ const downloadAndSendWithAPI = async (conn, chatId, replyMsg, videoId, isAudio, 
     }
 
     
-    if (!isAudio || asDocument || FORCE_DOCUMENT) {
-      return await sendAsDocument(conn, chatId, downloadUrl, isAudio, title, replyMsg);
-    } else {
-      return await sendFromUrl(conn, chatId, downloadUrl, isAudio, title, replyMsg);
+    let success = false;
+    
+    if (option === 1) {
+      
+      success = await sendAsAudio(conn, chatId, downloadUrl, title, replyMsg);
+    } else if (option === 2) {
+      
+      success = await sendAsVideo(conn, chatId, downloadUrl, title, replyMsg);
+    } else if (option === 3 || option === 4) {
+      
+      success = await sendAsDocument(conn, chatId, downloadUrl, isAudio, title, replyMsg);
     }
+    
+    return success;
   } catch (error) {
     console.error('Error descargando con API:', error);
     await conn.reply(chatId, `💙 Ocurrió un error al procesar tu solicitud. Intenta más tarde.`, replyMsg);
@@ -293,19 +308,18 @@ let handler = async (m, { conn, text }) => {
 
     const { title, thumbnail, timestamp, views, ago, videoId } = res[0];
 
-    
     let txt = `💙 [ YOUTUBE - PLAY ] 💙\n\n`
             + `💙 *Título:* ${title}\n`
             + `💙 *Duración:* ${timestamp}\n`
             + `💙 *Visitas:* ${views}\n`
             + `💙 *Subido:* ${ago}\n\n`
             + `💙 *Responde a este mensaje con:*\n`
-            + `1: Audio\n`
-            + `2: Video como Documento\n`
-            + `3: Audio como Documento\n`;
+            + `1: Audio MP3\n`
+            + `2: Video MP4\n`
+            + `3: Audio MP3 como Documento\n`
+            + `4: Video MP4 como Documento\n`;
 
     let SM = await conn.sendFile(m.chat, thumbnail, 'thumbnail.jpg', txt, m);
-    
     
     await conn.sendMessage(m.chat, { react: { text: '🎤', key: SM.key } });
 
@@ -322,30 +336,36 @@ let handler = async (m, { conn, text }) => {
       if (RM.message.extendedTextMessage?.contextInfo?.stanzaId === SM.key.id && !handleOnce.has(msgId)) {
         handleOnce.add(msgId);
         
-        
         await conn.sendMessage(UC, { react: { text: '⏳', key: RM.key } });
         let success = false;
+        let option = 0;
 
         if (UR === '1') {
-          
-          success = await downloadAndSendWithAPI(conn, UC, RM, videoId, true, title, false);
-          await conn.sendMessage(UC, { react: { text: success ? '🎵' : '❌', key: RM.key } });
+          option = 1; // Audio MP3
         } else if (UR === '2') {
-          
-          success = await downloadAndSendWithAPI(conn, UC, RM, videoId, false, title, true);
-          await conn.sendMessage(UC, { react: { text: success ? '📽️' : '❌', key: RM.key } });
+          option = 2; // Video MP4
         } else if (UR === '3') {
-          
-          success = await downloadAndSendWithAPI(conn, UC, RM, videoId, true, title, true);
-          await conn.sendMessage(UC, { react: { text: success ? '📎' : '❌', key: RM.key } });
+          option = 3; // Audio MP3 como documento
         } else if (UR === '4') {
-         
-          success = await downloadAndSendWithAPI(conn, UC, RM, videoId, false, title, true);
-          await conn.sendMessage(UC, { react: { text: success ? '📽️' : '❌', key: RM.key } });
+          option = 4; // Video MP4 como documento
         } else {
-          await conn.sendMessage(UC, { text: "💙 Opción inválida. Responde con 1 (audio), 2 (video documento) o 3 (audio documento)." }, { quoted: RM });
+          await conn.sendMessage(UC, { text: "💙 Opción inválida. Responde con:\n1: Audio MP3\n2: Video MP4\n3: Audio MP3 como documento\n4: Video MP4 como documento" }, { quoted: RM });
           await conn.sendMessage(UC, { react: { text: '❌', key: RM.key } });
+          return;
         }
+        
+        success = await downloadAndSend(conn, UC, RM, videoId, option, title);
+        
+        
+        let reactionEmoji = '❌';
+        if (success) {
+          if (option === 1) reactionEmoji = '🎵';
+          else if (option === 2) reactionEmoji = '🎬';
+          else if (option === 3) reactionEmoji = '📎';
+          else if (option === 4) reactionEmoji = '📁';
+        }
+        
+        await conn.sendMessage(UC, { react: { text: reactionEmoji, key: RM.key } });
       }
     });
   } catch (error) {
