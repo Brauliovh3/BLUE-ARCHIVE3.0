@@ -8,7 +8,7 @@ const {
 } = (await import("@whiskeysockets/baileys")).default;
 
 
-const redes = "https://example.com/your-social-link"; 
+const redes = "https://github.com/Brauliovh3"; 
 const titulowm = "★彡 𝙃𝙖𝙩𝙨𝙪𝙣𝙚 𝙈𝙞𝙠𝙪 𝘿𝙚𝙨𝙘𝙖𝙧𝙜𝙖𝙨 彡★";
 
 let handler = async (message, { conn, text, usedPrefix, command }) => {
