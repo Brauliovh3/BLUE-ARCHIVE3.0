@@ -32,12 +32,12 @@
 		"url": "git+https://github.com/Brauliovh3/Hatsune_Miku_2.0.git"
 	},
 	"bugs": {
-		"url": "https://github.com/StarlightsTeam/Ai-Hoshino/issues"
+		"url": "https://github.com/Brauliovh3/Hatsune_Miku_2.0/issues"
 	},
 	"license": "GPL-3.0-or-later",
 	"dependencies": {
 		"@bochilteam/scraper": "^4.2.4",
-		"@whiskeysockets/baileys": "npm:@itsukichan/baileys",
+		"@whiskeysockets/baileys": "^6.5.0",
 		"@ibaraki-douji/pixivts": "^2.4.1",
 		"@StarlightsTeam/Scraper": "github:StarlightsTeam/StarlightsTeam-Scraper",
 		"awesome-phonenumber": "^3.4.0",
