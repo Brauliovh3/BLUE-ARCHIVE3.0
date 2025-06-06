@@ -21,12 +21,12 @@ global.prems = []
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.packname = ``
-global.author = '{\n "bot": {\n   "name": "💙Hatsune Miku💙",\n     "author": "(ㅎㅊDEPOOLㅊㅎ)",\n   "status_bot": "active"\n }\n}'
+global.author = '{\n "bot": {\n   "name": "Hikari,Nozomi",\n     "author": "(ㅎㅊDEPOOLㅊㅎ)",\n   "status_bot": "active"\n }\n}'
 global.wait = '🐢 *Aɢᴜᴀʀᴅᴇ ᴜɴ ᴍᴏᴍᴇɴᴛᴏ, sᴏʏ ʟᴇɴᴛᴀ... ฅ^•ﻌ•^ฅ*'
-global.botname = '💙Hatsune Miku💙'
+global.botname = 'Hikari,Nozomi'
 global.textbot = `Powered By BVH3 INDUSTRIES`
 global.listo = '*Aqui tiene ฅ^•ﻌ•^ฅ*'
-global.namechannel = '💙HATSUNE MIKU CHANNEL💙'
+global.namechannel = '💙BLUE ARCHIVE CHANNEL💙'
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
