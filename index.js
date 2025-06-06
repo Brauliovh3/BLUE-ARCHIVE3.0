@@ -1,4 +1,4 @@
-console.log('01 Iniciando 01')
+console.log(' Iniciando ')
 
 import { join, dirname } from 'path'
 import { createRequire } from 'module'
@@ -10,7 +10,7 @@ import cfonts from 'cfonts'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const require = createRequire(__dirname)
 
-cfonts.say('Hatsune\nMiku', {
+cfonts.say('BLUE\nARCHIVE', {
   font: 'chrome',
   align: 'center',
   gradient: ['cyan', 'cyan']
