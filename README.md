@@ -25,7 +25,7 @@ NO HAY COLABORACION CON NINGUN HOST
 - [x] Bienvenida personalizada
 - [x] Chatbot (simsimi)
 - [x] Crear sticker de image/video/gif/url
-- [] SubBot (Jadibot)
+- [ ] SubBot (Jadibot)
 - [x] Juego RPG
 - [x] Descarga de música y video de YT
 - [X] Otros
