@@ -43,14 +43,29 @@ let handler = async (m, { conn }) => {
     const userId = m.sender;
     const userName = (await conn.getName(userId)) || 'Desconocido'; 
     
-    
+   
     if (!global.db || !global.db.waifu || !global.db.waifu.waifus) {
         return m.reply('💙 Error del sistema. El sistema waifu no está inicializado. Intenta usar .rw primero.');
     }
     
     try {
-       
-        if (!m.quoted || !m.quoted.fromMe) {
+        
+        if (!m.quoted) {
+            return m.reply('💙 Debes responder a un mensaje del bot con un personaje.');
+        }
+        
+      
+        console.log('🔍 Mensaje citado - fromMe:', m.quoted.fromMe);
+        console.log('🔍 Mensaje citado - sender:', m.quoted.sender);
+        console.log('🔍 Bot number:', conn.user?.jid || conn.user?.id);
+        
+        
+        const isBotMessage = m.quoted.fromMe || 
+                           m.quoted.sender === conn.user?.jid || 
+                           m.quoted.sender === conn.user?.id ||
+                           m.quoted.key?.fromMe;
+        
+        if (!isBotMessage) {
             return m.reply('💙 Debes responder a un mensaje del bot con un personaje.');
         }
         
@@ -58,13 +73,38 @@ let handler = async (m, { conn }) => {
         console.log('🔍 Waifus disponibles:', Object.keys(global.db.waifu.waifus));
         
         
-        if (!global.db.waifu.waifus[userId]) {
+        let currentWaifu = null;
+        let waifuUserId = null;
+        
+       
+        if (m.quoted.id) {
+            for (const [uid, waifu] of Object.entries(global.db.waifu.waifus)) {
+                if (waifu && waifu.messageId === m.quoted.id) {
+                    currentWaifu = waifu;
+                    waifuUserId = uid;
+                    break;
+                }
+            }
+        }
+        
+        
+        if (!currentWaifu && global.db.waifu.waifus[userId]) {
+            currentWaifu = global.db.waifu.waifus[userId];
+            waifuUserId = userId;
+        }
+        
+        if (!currentWaifu) {
             return m.reply('💙 No hay personaje disponible para guardar o ya fue reclamado.');
         }
         
-        const currentWaifu = global.db.waifu.waifus[userId];
         
-       
+        if (waifuUserId !== userId) {
+            return m.reply('💙 No puedes reclamar este personaje. Pertenece a otro usuario.');
+        }
+        
+        
+        
+        
         if (!currentWaifu.name || !currentWaifu.rarity) {
             return m.reply('💙 Error: Datos del personaje incompletos.');
         }
@@ -92,7 +132,7 @@ let handler = async (m, { conn }) => {
             return m.reply('💙 Ya tienes este personaje en tu colección.');
         }
         
-        
+       
         const newCharacter = {
             name: currentWaifu.name,
             rarity: currentWaifu.rarity,
@@ -111,9 +151,9 @@ let handler = async (m, { conn }) => {
         }
         
         
-        delete global.db.waifu.waifus[userId];
+        delete global.db.waifu.waifus[waifuUserId];
         
-       
+        
         let message = `✅ ¡VOCALOID GUARDADA! ✅\n\n`;
         message += `💙 Waifu: ${currentWaifu.name}\n`;
         message += `💎 Rareza: ${currentWaifu.rarity.toUpperCase()}\n`;
