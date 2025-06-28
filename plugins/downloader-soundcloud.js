@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import axios from 'axios';
 
 let handler = async (m, { conn, command, args, text, usedPrefix }) => {
-if (!text) return conn.reply(m.chat, `💙 Ingrese el nombre de la cancion de *Soundcloud.*`, m, rcanal)
+if (!text) return conn.reply(m.chat, `💚 Ingrese el nombre de la cancion de *Soundcloud.*`, m, rcanal)
 
 await m.react('🕒');
 try {
@@ -17,11 +17,11 @@ let { link: dl_url, quality, image } = json2;
 
 let audio = await getBuffer(dl_url);
 
-let txt = `*\`💙 S O U N C L O U D - M U S I C 💙\`*\n\n`;
-    txt += `	💙  *Título* : ${json[0].title}\n`;
-    txt += `	💙  *Calidad* : ${quality}\n`;
-    txt += `	💙  *Url* : ${url}\n\n`;
-    txt += `> 🌱 *${textbot}*`
+let txt = `*\`💚 S O U N C L O U D - M U S I C 💚\`*\n\n`;
+    txt += `	💚  *Título* : ${json[0].title}\n`;
+    txt += `	💚  *Calidad* : ${quality}\n`;
+    txt += `	💚  *Url* : ${url}\n\n`;
+    txt += `> 🚂 *${textbot}*`
 
 await conn.sendFile(m.chat, image, 'thumbnail.jpg', txt, m, null, rcanal);
 await conn.sendMessage(m.chat, { audio: audio, fileName: `${json[0].title}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m })
@@ -56,7 +56,7 @@ console.log(`Error : ${e}`);
 };
 
 /*
-//Instalar la dependencia Node-id3 🙃
+//Instalar la dependencia Node-id3 
 //Use math por problemas de que algunos audios no se envian
 //La segunda url si descarga los datos de la cancion para eso tienes que ingresar a Souncloud la musica que quieres descargar ingresas y copias el link y lo pegas en la segunda url :) 
 //el buscador aun no tiene permisos para ir directamente a la cancion y obtener el link directamente a la cancion por eso es que algunos audios no son enviados
@@ -65,7 +65,7 @@ import fs from 'fs'
 import nodeID3 from 'node-id3'
 
 let handler = async (m, { conn, text, usedPrefix, command }) => {
-if (!text) return conn.reply(m.chat, `💙 Ingrese el nombre de la cancion de *Soundcloud.*`, m, rcanal)
+if (!text) return conn.reply(m.chat, `💚 Ingrese el nombre de la cancion de *Soundcloud.*`, m, rcanal)
 await m.react('🕓')
 try {
 let { data: results } = await axios.get(`https://apis-starlights-team.koyeb.app/starlight/soundcloud-search?text=${text}`, { headers: { 'Content-Type': 'application/json' } })
@@ -81,13 +81,13 @@ artist: sm.creator,
 image: Buffer.from(img.data) 
 }
 nodeID3.write(tags, mp3)
-let txt = `*\`💙 S O U N C L O U D - M U S I C 💙\`*\n\n`
+let txt = `*\`💚 S O U N C L O U D - M U S I C 💚\`*\n\n`
 txt += `🍘• *Nombre:* ${randoms.title}\n`
 txt += `🍘• *Artista:* ${randoms.artist}\n`
 txt += `🍘• *Duracion:* ${randoms.duration}\n`
 txt += `🍘• *Reproducciones:* ${randoms.repro}\n`
 txt += `🍘• *Link:* ${randoms.url}\n\n`
-txt += `💙 Powered By BVH3 INDUSTRIES`
+txt += `🚂 Powered By BVH3 INDUSTRIES`
 await conn.sendFile(m.chat, randoms.image, 'thumb.jpg', txt, m)
 await conn.sendMessage(m.chat, { audio: fs.readFileSync(mp3), fileName: `${sm.title}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m })
 fs.unlinkSync(mp3)
