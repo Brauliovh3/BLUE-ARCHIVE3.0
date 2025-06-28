@@ -32,14 +32,14 @@ handler.before = async function (m, { conn, isAdmin, isBotAdmin, isOwner }) {
     for (let prefix of forbidPrefixes) {
       if (sender.startsWith(prefix)) {
         console.log('Peruvian user detected, removing');
-        await conn.reply(m.chat, '💙 En este grupo no se permite el acceso a usuarios peruanos (+51).', m);
+        await conn.reply(m.chat, '💚 En este grupo no se permite el acceso a usuarios peruanos (+51).', m);
         
         try {
           await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
           console.log('User removed successfully');
         } catch (error) {
           console.error('Error removing user:', error);
-          await conn.reply(m.chat, '💙 No se pudo eliminar al usuario. Error: ' + error.message, m);
+          await conn.reply(m.chat, '💚 No se pudo eliminar al usuario. Error: ' + error.message, m);
         }
         
         return false;
