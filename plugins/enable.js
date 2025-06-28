@@ -101,26 +101,26 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
     default:
       if (!/[01]/.test(command)) return m.reply(`
 ╭━━━━━━━━━━━━━━━━━━━━━━━╮
-│ 💙 *Hatsune Miku Configuración* 💙
+│ 💚 *Tachibana Nozomi Configuración* 💚
 ╰━━━━━━━━━━━━━━━━━━━━━━━╯
 📋 *LISTA DE OPCIONES DISPONIBLES*
-🔹 *${usedPrefix + command} welcome*  
+🚂 *${usedPrefix + command} welcome*  
 ↳ Activa/Desactiva bienvenida en grupos
-🔹 *${usedPrefix + command} nsfw*  
+🚂 *${usedPrefix + command} nsfw*  
 ↳ Activa/Desactiva comandos +18 en grupos
-🔹 *${usedPrefix + command} antiarabes*  
+🚂 *${usedPrefix + command} antiarabes*  
 ↳ Activa/Desactiva el anti-árabes en grupos
-🔹 *${usedPrefix + command} antiperuanos*  
+🚂 *${usedPrefix + command} antiperuanos*  
 ↳ Activa/Desactiva el anti-peruanos en grupos
-🔹 *${usedPrefix + command} antilink*  
+🚂 *${usedPrefix + command} antilink*  
 ↳ Activa/Desactiva el anti-enlaces en grupos
-🔹 *${usedPrefix + command} antilink2*  
+🚂 *${usedPrefix + command} antilink2*  
 ↳ Activa/Desactiva el anti-enlaces-2 en grupos
-🔹 *${usedPrefix + command} antitoxic*  
+🚂 *${usedPrefix + command} antitoxic*  
 ↳ Activa/Desactiva el anti-groserías en grupos
-🔹 *${usedPrefix + command} autoread*  
+🚂 *${usedPrefix + command} autoread*  
 ↳ Activa/Desactiva la lectura automática
-🔹 *${usedPrefix + command} document*  
+🚂 *${usedPrefix + command} document*  
 ↳ Activa/Desactiva la descarga como documento
 💡 *Ejemplo:* ${usedPrefix + command} welcome
 `.trim())
@@ -135,11 +135,11 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
   }
 
   m.reply(`
-╭─────❬ 💙 *Hatsune Miku* 💙 ❭─────╮
+╭─────❬ 💚 *Tachibana Nozomi* 💚 ❭─────╮
 │ 
-│ 🔹 Función: *${type}*
-│ 🔹 Estado: *${isEnable ? 'ACTIVADA ✅' : 'DESACTIVADA ❌'}*
-│ 🔹 Valor almacenado: *${m.isGroup ? (chat[type] !== undefined ? chat[type] : (
+│ 🚂 Función: *${type}*
+│ 🚂 Estado: *${isEnable ? 'ACTIVADA ✅' : 'DESACTIVADA ❌'}*
+│ 🚂 Valor almacenado: *${m.isGroup ? (chat[type] !== undefined ? chat[type] : (
     type === 'welcome' || type === 'bv' || type === 'bienvenida' ? chat.bienvenida :
     type === 'antilink' ? chat.antiLink :
     type === 'antilink2' ? chat.antiLink2 :
@@ -151,8 +151,8 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
   )) : 'N/A'}*
 │ ${isAll ? '🌐 Aplicado globalmente' : isUser ? '👤 Aplicado al usuario' : '👥 Aplicado al grupo'}
 │ 
-│ 💙 Gracias por usar Hatsune Miku Bot
-╰─────❬ 💙 *Hatsune Miku* 💙 ❭─────╯
+│ 🚂 Gracias por usar a Tachibana Nozomi
+╰─────❬ 💚 *Tachibana Nozomi* 💚 ❭─────╯
 `.trim())
 }
 handler.help = ['enable', 'disable']
