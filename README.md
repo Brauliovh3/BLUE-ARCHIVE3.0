@@ -51,7 +51,7 @@ NO HAY COLABORACION CON NINGUN HOST
 ---------
 ## Repo Stats 🔭
 
-![github card](https://github-readme-stats.vercel.app/api/pin/?username=Brauliovh3&repo=-Hatsune-Miku-&theme=chartreuse-dark)
+![github card](https://github-readme-stats.vercel.app/api/pin/?username=Brauliovh3&repo=BLUE-ARCHIVE3.0&theme=chartreuse-dark)
 
 ---------
 
@@ -65,5 +65,5 @@ NO HAY COLABORACION CON NINGUN HOST
 
 <a href="https://github.com/Brauliovh3"><img src="https://github.com/Brauliovh3.png" width="300" height="300" alt="(ㅎㅊDEPOOLㅊㅎ)"/></a>
 
-`© Hatsune Miku / BY (ㅎㅊDEPOOLㅊㅎ)`
+`© BLUE ARCHIVE / BY (ㅎㅊDEPOOLㅊㅎ)`
 
