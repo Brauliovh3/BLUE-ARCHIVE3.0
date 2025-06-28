@@ -1,16 +1,16 @@
 import fetch from 'node-fetch'
 
 export async function before(m, { conn }) {
-let img = await (await fetch(`https://tinyurl.com/2898ndat`)).buffer()
+let img = await (await fetch(`https://media.tenor.com/a_ie-YlAL1YAAAAe/blue-archive-tachibana-nozomi.png`)).buffer()
 
   const canales = [
     {
       id: "120363315369913363@newsletter",
-      nombre: "💙HATSUNE MIKU CHANNEL💙",
+      nombre: "💙BLUE ARCHIVE CHANNEL💙",
     },
     {
       id: "120363315369913363@newsletter",
-      nombre: "💙HATSUNE MIKU CHANNEL💙",
+      nombre: "💙BLUE ARCHIVE CHANNEL💙",
     },
   ]
 
