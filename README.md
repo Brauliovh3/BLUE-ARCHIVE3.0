@@ -1,7 +1,7 @@
-<h1 align="center">‧ 💙HATSUNE-MIKU-CHANNEL💙 ‧
+<h1 align="center">‧ 💙BLUE-ARCHIVE-CHANNEL💙 ‧
 </p>
 <p>
-        <img src= "https://telegra.ph/file/5e7042bf17cde23989e71.jpg">
+        <img src= "https://images.alphacoders.com/122/1226538.jpg">
     </p>
     <p align="center">
         <a href="#"><img title="simple-whatsapp-bot" src="https://img.shields.io/badge/-SIMPLE--WHATSAPP--BOT-green?colorA=%21ff0000&colorB=%21017e40&style=for-the-badge"></a>
