@@ -4,49 +4,78 @@ import fetch from 'node-fetch'
 import { xpRange } from '../lib/levelling.js'
 
 let tags = {
-  'main': 'Information',
-  'search': 'Search',
-  'game': 'Games',
-  'serbot': 'Sub-Bots',
-  'rpg': 'Rpg',
-  'rg': 'Registro',
-  'sticker': 'Sticker',
-  'img': 'Image',
-  'group': 'Groups',
-  'nable': 'On / Off', 
-  'premium': 'Premium',
-  'downloader': 'Download',
-  'tools': 'Tools',
-  'fun': 'Fun',
-  'nsfw': 'Nsfw', 
-  'cmd': 'Database',
-  'owner': 'Creador', 
-  'audio': 'Audios', 
-  'advanced': 'Avanzado',
+  'main': '📋 Información Principal',
+  'search': '🔍 Búsqueda',
+  'game': '🎮 Juegos',
+  'serbot': '🤖 Sub-Bots',
+  'rpg': '⚔️ RPG',
+  'rg': '📝 Registro',
+  'sticker': '🎭 Stickers',
+  'img': '🖼️ Imágenes',
+  'group': '👥 Grupos',
+  'nable': '⚡ Activar/Desactivar', 
+  'premium': '💎 Premium',
+  'downloader': '📥 Descargas',
+  'tools': '🛠️ Herramientas',
+  'fun': '🎪 Diversión',
+  'nsfw': '🔞 NSFW', 
+  'cmd': '💾 Base de Datos',
+  'owner': '👑 Creador', 
+  'audio': '🎵 Audios', 
+  'advanced': '⚙️ Avanzado',
 }
 
 const defaultMenu = {
   before: `
-  *💮💙🥢⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯🥢💙💮*
+╭─────────────────────────────────╮
+│  ✦ 𝗕𝗟𝗨𝗘 𝗔𝗥𝗖𝗛𝗜𝗩𝗘 𝗔𝗦𝗦𝗜𝗦𝗧𝗔𝗡𝗧 ✦  │
+╰─────────────────────────────────╯
 
-“ Hola *%name* soy *💙HATSUNE MIKU💙*, %greeting ”
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  🌸 ¡Hola *%name*! Soy *TACHIBANA NOZOMI* 🌸
+┃  
+┃  💫 Estudiante de Millennium Science School
+┃  🎯 Especialista en información y estrategia
+┃  ✨ %greeting
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-╭── ︿︿︿︿︿ *⭒   ⭒   ⭒   ⭒   ⭒   ⭒*
-┊ ‹‹ *Hello* :: *%name*
-┊01 *💙HATSUNE MIKU CHANNEL💙*
-╰─── 💙 Hatsune Miku 💙
-┊B [ *Modo* :: *Público*
-┊V [ *Baileys* :: *Multi Device*
-┊H [ *Tiempo Activo* :: *%muptime*
-┊3 [ *Usuarios* :: *%totalreg*
-╰─────────
+╔══════════════════════════════════════╗
+║           📊 ESTADO DEL SISTEMA      ║
+╠══════════════════════════════════════╣
+║ 🌐 Modo: Público                     ║
+║ ⚡ Baileys: Multi Device             ║
+║ ⏰ Tiempo Activo: %muptime           ║
+║ 👥 Usuarios Registrados: %totalreg   ║
+║ 📅 Fecha: %date                      ║
+║ 🕐 Hora: %time                       ║
+╚══════════════════════════════════════╝
+
 %readmore
-*─ׄ─ׅ─ׄ─⭒ L I S T A  -  M E N Ú S ⭒─ׄ─ׅ─ׄ─*
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  🎯 𝗠𝗘𝗡𝗨́ 𝗗𝗘 𝗖𝗢𝗠𝗔𝗡𝗗𝗢𝗦  ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 `.trimStart(),
-  header: '╔═══◇◆🥬【 𝑴𝑬𝑵Ú メ %category 】🥬◆◇═══╗\n║╔───────────────────────',
-    body: '║🌱┊%cmd %islimit %isPremium\n',
-   footer: '║───────────────────────────\n╚═════════◆◇◆═════════╝\n',
-    after: `> 💙 ${textbot}`,
+  header: `
+╔═══════════════════════════════════════╗
+║  🎨 %category
+╚═══════════════════════════════════════╝`,
+  body: `┃ 🔹 %cmd %islimit %isPremium`,
+  footer: `╚═══════════════════════════════════════╝\n`,
+  after: `
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  💙 Blue Archive - Millennium School  ┃
+┃  🌸 Tachibana Nozomi siempre lista    ┃
+┃  ✨ para ayudarte en tu aventura      ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+> 🎯 *¡Usa los comandos sabiamente, Sensei!*
+> 💎 *Premium* = Comando premium
+> ⭐ *Límite* = Comando con límite de uso
+
+───────────────────────────────────────
+🌟 *¿Necesitas ayuda?* Escribe *#help [comando]*
+💫 *Canal oficial:* ${textbot || 'Blue Archive Channel'}
+────────────────────────────────────────`,
 }
 
 let handler = async (m, { conn, usedPrefix: _p, __dirname }) => {
@@ -114,8 +143,8 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname }) => {
           ...help.filter(menu => menu.tags && menu.tags.includes(tag) && menu.help).map(menu => {
             return menu.help.map(help => {
               return body.replace(/%cmd/g, menu.prefix ? help : '%p' + help)
-                .replace(/%islimit/g, menu.limit ? '◜⭐◞' : '')
-                .replace(/%isPremium/g, menu.premium ? '◜🪪◞' : '')
+                .replace(/%islimit/g, menu.limit ? '⭐' : '')
+                .replace(/%isPremium/g, menu.premium ? '💎' : '')
                 .trim()
             }).join('\n')
           }),
@@ -135,7 +164,7 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname }) => {
       version: _package.version,
       npmdesc: _package.description,
       npmmain: _package.main,
-      author: _package.author.name,
+      author: _package.author?.name || 'Unknown',
       license: _package.license,
       exp: exp - min,
       maxexp: xp,
@@ -147,29 +176,21 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname }) => {
     }
     text = text.replace(new RegExp(`%(${Object.keys(replace).sort((a, b) => b.length - a.length).join`|`})`, 'g'), (_, name) => '' + replace[name])
     
-    let pp = 'https://telegra.ph/file/5e7042bf17cde23989e71.jpg'
-    let pp2 = 'https://telegra.ph/file/5e7042bf17cde23989e71.jpg'
-    let pp3 = 'https://telegra.ph/file/5e7042bf17cde23989e71.jpg'
-    let pp4 = 'https://telegra.ph/file/5e7042bf17cde23989e71.jpg'
-    let pp5 = 'https://telegra.ph/file/5e7042bf17cde23989e71.jpg'
-    let pp6 = 'https://telegra.ph/file/5e7042bf17cde23989e71.jpg'
-    let pp7 = 'https://telegra.ph/file/5e7042bf17cde23989e71.jpg'
-    let pp8 = 'https://telegra.ph/file/5e7042bf17cde23989e71.jpg'
-    let pp9 = 'https://telegra.ph/file/5e7042bf17cde23989e71.jpg'
-    let pp10 = 'https://telegra.ph/file/5e7042bf17cde23989e71.jpg'
-    let pp11 = 'https://telegra.ph/file/5e7042bf17cde23989e71.jpg'
-    let pp12 = 'https://telegra.ph/file/5e7042bf17cde23989e71.jpg'
-    let pp13 = 'https://telegra.ph/file/5e7042bf17cde23989e71.jpg'
-    let pp14 = 'https://telegra.ph/file/5e7042bf17cde23989e71.jpg'
-    let pp15 = 'https://telegra.ph/file/5e7042bf17cde23989e71.jpg'
+    
+    let blueArchiveImages = [
+      'https://media.tenor.com/a_ie-YlAL1YAAAAe/blue-archive-tachibana-nozomi.png', 
+      'https://i.pinimg.com/736x/eb/a4/fb/eba4fbad60730bc11bbabef0966a69b2.jpg', 
+      'https://i.pinimg.com/736x/9b/1f/8d/9b1f8d438239d54c06af279bffbcfae3.jpg', 
+    ]
+    
     let img = `./storage/img/menu.jpg`
-    await m.react('💙')
-   // await conn.sendMessage(m.chat, { video: { url: [pp, pp2, pp3, pp4, pp5, pp6, pp7, pp8, pp9, pp10, pp11, pp12, pp13, pp14, pp15].getRandom() }, gifPlayback: true, caption: text.trim(), mentions: [m.sender] }, { quoted: estilo })
-    await conn.sendFile(m.chat, img, 'thumbnail.jpg', text.trim(), m, null, rcanal)
-   //await conn.sendAi(m.chat, botname, textbot, text.trim(), img, img, canal, estilo)
+    await m.react('🌸') 
+    
+    
+    await conn.sendFile(m.chat, img, 'blue_archive_menu.jpg', text.trim(), m, null, rcanal)
 
   } catch (e) {
-    conn.reply(m.chat, '❎ Lo sentimos, el menú tiene un error.', m)
+    conn.reply(m.chat, '❌ Lo siento, Sensei. Hay un error en el sistema del menú.', m)
     throw e
   }
 }
@@ -179,7 +200,6 @@ handler.tags = ['main']
 handler.command = ['menu', 'help', 'menú'] 
 handler.register = true 
 export default handler
-
 
 const more = String.fromCharCode(8206)
 const readMore = more.repeat(4001)
@@ -191,32 +211,33 @@ function clockString(ms) {
   return [h, m, s].map(v => v.toString().padStart(2, 0)).join(':')
 }
 
-  var ase = new Date();
-  var hour = ase.getHours();
+
+var ase = new Date();
+var hour = ase.getHours();
 switch(hour){
-  case 0: hour = 'una linda noche 🌙'; break;
-  case 1: hour = 'una linda noche 💤'; break;
-  case 2: hour = 'una linda noche 🦉'; break;
-  case 3: hour = 'una linda mañana ✨'; break;
-  case 4: hour = 'una linda mañana 💫'; break;
-  case 5: hour = 'una linda mañana 🌅'; break;
-  case 6: hour = 'una linda mañana 🌄'; break;
-  case 7: hour = 'una linda mañana 🌅'; break;
-  case 8: hour = 'una linda mañana 💫'; break;
-  case 9: hour = 'una linda mañana ✨'; break;
-  case 10: hour = 'un lindo dia 🌞'; break;
-  case 11: hour = 'un lindo dia 🌨'; break;
-  case 12: hour = 'un lindo dia ❄'; break;
-  case 13: hour = 'un lindo dia 🌤'; break;
-  case 14: hour = 'una linda tarde 🌇'; break;
-  case 15: hour = 'una linda tarde 🥀'; break;
-  case 16: hour = 'una linda tarde 🌹'; break;
-  case 17: hour = 'una linda tarde 🌆'; break;
-  case 18: hour = 'una linda noche 🌙'; break;
-  case 19: hour = 'una linda noche 🌃'; break;
-  case 20: hour = 'una linda noche 🌌'; break;
-  case 21: hour = 'una linda noche 🌃'; break;
-  case 22: hour = 'una linda noche 🌙'; break;
-  case 23: hour = 'una linda noche 🌃'; break;
+  case 0: hour = 'una tranquila noche de estudio 🌙📚'; break;
+  case 1: hour = 'un descanso nocturno reparador 💤✨'; break;
+  case 2: hour = 'una noche de vigilancia académica 🦉📖'; break;
+  case 3: hour = 'una madrugada llena de posibilidades 🌟'; break;
+  case 4: hour = 'un amanecer de nuevos desafíos 💫🎯'; break;
+  case 5: hour = 'un hermoso amanecer escolar 🌅🏫'; break;
+  case 6: hour = 'una mañana perfecta para entrenar 🌄⚡'; break;
+  case 7: hour = 'una energética mañana de clases 🌅📝'; break;
+  case 8: hour = 'una productiva mañana académica 💫📚'; break;
+  case 9: hour = 'una brillante mañana de aprendizaje ✨🎓'; break;
+  case 10: hour = 'un día perfecto para misiones 🌞🎯'; break;
+  case 11: hour = 'un día de estrategias y táctica 🌨️⚔️'; break;
+  case 12: hour = 'un mediodía de decisiones importantes ❄️🎪'; break;
+  case 13: hour = 'una tarde de análisis y datos 🌤️📊'; break;
+  case 14: hour = 'una relajante tarde escolar 🌇🎒'; break;
+  case 15: hour = 'una tarde de club y actividades 🥀🎭'; break;
+  case 16: hour = 'una hermosa tarde de compañerismo 🌹👥'; break;
+  case 17: hour = 'una mágica tarde de Millennium 🌆🏢'; break;
+  case 18: hour = 'una serena noche de planificación 🌙📋'; break;
+  case 19: hour = 'una tranquila noche urbana 🌃🌆'; break;
+  case 20: hour = 'una noche estrellada de reflexión 🌌⭐'; break;
+  case 21: hour = 'una noche de camaradería estudiantil 🌃👫'; break;
+  case 22: hour = 'una pacífica noche de descanso 🌙😴'; break;
+  case 23: hour = 'una noche de preparación para mañana 🌃📅'; break;
 }
-  var greeting = "espero que tengas " + hour;
+var greeting = "espero que tengas " + hour;
