@@ -2,13 +2,12 @@ import fs from 'fs';
 import path from 'path';
 
 let handler = async (m, { conn }) => {
-    let name2 = conn.getName(m.sender); // Obtener el nombre de quien usa el comando
-    m.react('🌱'); // Reacción al mensaje
+    let name2 = conn.getName(m.sender); 
+    m.react('🌱'); 
+    
+    let str = `💚${name2} está aburrido/a🥱.`.trim();
 
-    // Mensaje indicando que la persona está aburrida
-    let str = `${name2} está aburrido/a🥱.`.trim();
-
-    // Si es un grupo, seleccionamos un video aleatorio y lo enviamos
+    
     if (m.isGroup){
         let pp = 'https://files.catbox.moe/n4o7x4.mp4';
         let pp2 = 'https://files.catbox.moe/1ynb8f.mp4';
