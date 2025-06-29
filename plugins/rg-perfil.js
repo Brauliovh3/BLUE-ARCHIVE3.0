@@ -127,9 +127,9 @@ let handler = async (m, { conn, usedPrefix, command }) => {
     
    
     let txt = `╭─「📋 BASE DE DATOS SCHALE─╮\n`;
-    txt += `│                         │\n`;
+    txt += `│                                       │\n`;
     txt += `│💠 PERFIL ESTUDIANTIL 💠│\n`;
-    txt += `│                         │\n`;
+    txt += `│                                       │\n`;
     txt += `├─────────────────────────┤\n`;
     txt += `│ 👤 Nombre del Estudiante│\n`;
     txt += `│ ➤ ${formatText(name)}│\n`;
