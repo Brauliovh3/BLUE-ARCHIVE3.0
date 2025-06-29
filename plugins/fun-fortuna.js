@@ -25,7 +25,7 @@ let handler = async (m, { conn }) => {
      porque ellos quieren que seas lo que ellos no pudieron.`
   ];
   
-  const emojis = ["🎵", "💙", "✨", "🎤", "🌟", "💫", "🎶", "🌈", "🎸", "💖"];
+  const emojis = ["🎆", "💚", "✨", "🎁", "🌟", "💫", "🚂", "🌈", "🎸", "💖"];
   
   
   const luckyNumbers = [];
@@ -61,7 +61,7 @@ ${randomEmoji} ${fortune}
 
 *Tu emoción del día:* ${emotion}
 
-💙 ¡Que Miku te acompañe con su música hoy!
+💚 ¡Que tenga un lindo dia SENSEI!
   `, m);
   
   
