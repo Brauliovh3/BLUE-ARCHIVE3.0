@@ -7,17 +7,17 @@ let handler = async (m, { conn, usedPrefix }) => {
     let who;
     if (m.isGroup) who = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : false;
     else who = m.chat;
-    if (!who) throw '💙 Etiqueta o menciona a alguien';
+    if (!who) throw '💚 Etiqueta o menciona a alguien';
 
     let user = global.db.data.users[who];
     let name = conn.getName(who);
     let name2 = conn.getName(m.sender);
-   // m.react('💋');
+  
     await conn.sendMessage(m.chat, { react: { text: '💋', key: m.key } })
-    let str = `${name2} Le dio un Beso a ${name}`.trim();
+    let str = `💚${name2} Le dio un Beso a ${name}`.trim();
     if (m.isGroup){
     
-    // Directorio que contiene las imágenes
+    
     let pp = 'https://telegra.ph/file/d6ece99b5011aedd359e8.mp4'
     let pp2 = 'https://telegra.ph/file/d6ece99b5011aedd359e8.mp4'
     let pp3 = 'https://telegra.ph/file/ba841c699e9e039deadb3.mp4'
@@ -42,7 +42,7 @@ let handler = async (m, { conn, usedPrefix }) => {
     conn.sendMessage(m.chat, { video: { url: video }, gifPlayback: true, caption:str, mentions: [m.sender] },{ quoted: estilo })
     };
    
-  //  m.react('💋');
+  
 }
 
 handler.help = ['besar @tag'];
