@@ -23,7 +23,7 @@ let handler = async function (m, { conn, text, usedPrefix, command }) {
   let date = now.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
   let time = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
   
-  let txt = '*`💚  R E G I S T R O   U S E R  💚`*\n\n'
+  let txt = '*`💚R E G I S T R O   U S E R💚`*\n\n'
       txt += `\t\t*💌 Tag* :: @${m.sender.split('@')[0]}\n`
       txt += `\t\t*💌 Nombre* :: ${name}\n`
       txt += `\t\t*💌 Edad* :: ${age} años\n\n`
