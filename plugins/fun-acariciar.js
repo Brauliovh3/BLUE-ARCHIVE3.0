@@ -11,7 +11,7 @@ let handler = async (m, { conn, usedPrefix }) => {
     let name = conn.getName(who);
     let name2 = conn.getName(m.sender);
     m.react('🫳');
-    let str = `${name2} Le esta Dando una Caricia a ${name}`.trim();
+    let str = `💚${name2} Le esta Dando una Caricia a ${name}`.trim();
     if (m.isGroup){
     
     let pp = 'https://telegra.ph/file/f75aed769492814d68016.mp4'
