@@ -20,12 +20,12 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       }
     }
     
-    conn.sendMessage(m.chat, { text: 'Hola soy Hatsune Miku, ¿Cómo puedo ayudarte?' }, { quoted: anu })
+    conn.sendMessage(m.chat, { text: 'Hola SENSEI Nozomi quiere saber, ¿Cómo puedo ayudarte?' }, { quoted: anu })
   } catch (error) {
-    conn.sendMessage(m.chat, 'Hola soy Hatsune Miku, ¿Cómo puedo ayudarte?', 'conversation', { quoted: m })
+    conn.sendMessage(m.chat, 'Hola SENSEI, ¿Cómo puedo ayudarte?', 'conversation', { quoted: m })
   }
 }
 
-handler.customPrefix = /^(Ai)$/i
+handler.customPrefix = /^(Nozomi)$/i
 handler.command = new RegExp
 export default handler
