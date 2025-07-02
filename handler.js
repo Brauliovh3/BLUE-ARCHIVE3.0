@@ -96,7 +96,8 @@ export async function handler(chatUpdate) {
                 if (!('antiPeruanos' in chat))
                     chat.antiPeruanos = false  
                 if (!('antiToxic' in chat))
-                 if (!('nsfw' in chat))
+                    chat.antiToxic = false
+                if (!('nsfw' in chat))
                     chat.nsfw = false
                 if (!isNumber(chat.expired))
                     chat.expired = 0
@@ -301,7 +302,7 @@ export async function handler(chatUpdate) {
                 else
                     m.exp += xp
                 if (!isPrems && plugin.limit && global.db.data.users[m.sender].limit < plugin.limit * 1) {
-                    conn.reply(m.chat, `Se agotaron tus *💌 *`, m, rcanal)
+                    conn.reply(m.chat, `💚🌿 ¡Sensei! Se agotaron tus *🌱 Cebollines*. Como estratega del Club de Ingeniería, recomiendo conseguir más recursos antes de continuar.`, m)
                     continue
                 }
                 let extra = {
@@ -349,7 +350,7 @@ export async function handler(chatUpdate) {
                         }
                     }
                     if (m.limit)
-                        conn.reply(m.chat, `Utilizaste *${+m.limit}* 💌`, m, rcanal)
+                        conn.reply(m.chat, `💚🌿 Utilizaste *${+m.limit}* 🌱 Cebollines en esta operación, Sensei.`, m)
                 }
                 break
             }
@@ -399,35 +400,35 @@ export async function handler(chatUpdate) {
         }
 
         try {
-      if (!opts['noprint']) await (await import(`./lib/print.js`)).default(m, this)
-    } catch (e) {
-      console.log(m, m.quoted, e)
+            if (!opts['noprint']) await (await import(`./lib/print.js`)).default(m, this)
+        } catch (e) {
+            console.log(m, m.quoted, e)
+        }
+        const settingsREAD = global.db.data.settings[this.user.jid] || {}
+        if (opts['autoread']) await this.readMessages([m.key])
+        if (settingsREAD.autoread) await this.readMessages([m.key])
     }
-    const settingsREAD = global.db.data.settings[this.user.jid] || {}
-    if (opts['autoread']) await this.readMessages([m.key])
-    if (settingsREAD.autoread) await this.readMessages([m.key])
-  }
 }
 
 global.dfail = (type, m, conn, usedPrefix) => {
     let msg = {
-        owner: `💚 Hola, este comando solo puede ser utilizado por el *SENSEI* de la Bot.`,
-        owner: `💚 Hola, este comando solo puede ser utilizado por el *SENSEI* de la Bot y *Sub Bots*.`,
-        mods: `💚 Hola, este comando solo puede ser utilizado por los *Moderadores* de la Bot.`,
-        premium: `💚 Hola, este comando solo puede ser utilizado por Usuarios *Premium*.`,
-        group: `💚 Hola, este comando solo puede ser utilizado en *Grupos*.`,
-        private: `💚 Hola, este comando solo puede ser utilizado en mi Chat *Privado*.`,
-        admin: `💚 Hola, este comando solo puede ser utilizado por los *Administradores* del Grupo.`,
-        botAdmin: `💚 Hola, la bot debe ser *Administradora* para ejecutar este Comando.`,
-        unreg: `💚 Hola, para usar este comando debes estar *Registrado.*\n\nPara usar el bot debes registrarte primero\n\nUtiliza: */reg nombre.edad*\n\n_Ejemplo: */reg (ㅎㅊDEPOOLㅊㅎ).18*_\n\nNo pongas los ()`,
-        restrict: `💚 Hola, esta característica está *deshabilitada.*`  
+        rowner: `💚🌿 ¡Sensei! Este comando solo puede ser utilizado por el *COMANDANTE SUPREMO* del Club de Ingeniería.`,
+        owner: `💚🌿 ¡Sensei! Este comando solo puede ser utilizado por el *PRESIDENTE* del Club de Ingeniería y comandantes autorizados.`,
+        mods: `💚🌿 ¡Sensei! Este comando solo puede ser utilizado por los *MODERADORES ESTRATÉGICOS* del Club de Ingeniería.`,
+        premium: `💚🌿 ¡Sensei! Este comando requiere *MEMBRESÍA PREMIUM* del Club de Ingeniería para acceder a funciones avanzadas.`,
+        group: `💚🌿 ¡Sensei! Este comando solo puede ser utilizado en *UNIDADES TÁCTICAS* (grupos). Las operaciones individuales no están permitidas.`,
+        private: `💚🌿 ¡Sensei! Este comando solo puede ser utilizado en mi *CANAL PRIVADO DE COMUNICACIÓN*. Las operaciones grupales no están permitidas.`,
+        admin: `💚🌿 ¡Sensei! Este comando solo puede ser utilizado por los *ADMINISTRADORES* de la unidad táctica. Se requieren permisos de liderazgo.`,
+        botAdmin: `💚🌿 ¡Sensei! Como estratega del Club de Ingeniería, necesito ser *ADMINISTRADORA* de esta unidad táctica para ejecutar operaciones de gestión.`,
+        unreg: `💚🌿 ¡Sensei! Para usar este comando debes estar *REGISTRADO* en la base de datos del Club de Ingeniería.\n\n🌿 Para registrarte en el sistema, utiliza:\n*${usedPrefix || '.'}reg nombre.edad*\n\n📝 Ejemplo: *${usedPrefix || '.'}reg Nozomi.17*\n\n"La organización estratégica requiere identificación adecuada." - Nozomi 💚`,
+        restrict: `💚🌿 ¡Sensei! Esta función está *DESHABILITADA* por protocolos de seguridad del Club de Ingeniería. Contacta con el administrador del sistema.`  
     }[type]
-    if (msg) return conn.reply(m.chat, msg, m, rcanal).then(_ => m.react('💢'))
+    if (msg) return conn.reply(m.chat, msg, m).then(_ => m.react('💢'))
 }
 
 let file = global.__filename(import.meta.url, true)
 watchFile(file, async () => {
     unwatchFile(file)
-    console.log(chalk.magenta("Se actualizo 'handler.js'"))
+    console.log(chalk.magenta("💚🌿 [Club de Ingeniería] Se actualizó 'handler.js' - Nozomi"))
     if (global.reloadHandler) console.log(await global.reloadHandler())
 })
