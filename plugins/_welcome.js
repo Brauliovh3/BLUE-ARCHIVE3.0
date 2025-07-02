@@ -18,6 +18,8 @@ export async function before(m, {conn, participants, groupMetadata}) {
 🎀 ¡Bienvenido a nuestro club de actividades! 🎀
 💚 Nozomi espera que disfrutes tu tiempo aquí~ ✨
 🌿 ¡Que tengas una experiencia académica increíble! 🌿
+🎆Sigue nuestro canal🚂
+💙https://whatsapp.com/channel/0029VajYamSIHphMAl3ABi1o💙
 💚═══════◆【 🎓 】◆═══════💚`
     
     await conn.sendAi(m.chat, botname, textbot, bienvenida, img, img, canal, estilo)
@@ -34,6 +36,8 @@ export async function before(m, {conn, participants, groupMetadata}) {
 😔 Las reglas escolares deben ser respetadas...
 💚 Esperamos que reflexiones sobre tus acciones 🌿
 🎓 La disciplina es parte del crecimiento estudiantil
+🎆Sigue nuestro canal🚂
+💙https://whatsapp.com/channel/0029VajYamSIHphMAl3ABi1o💙
 💚═══════◆【 ⚖️ 】◆═══════💚`
     
     await conn.sendAi(m.chat, botname, textbot, bye, img, img, canal, estilo)
@@ -51,6 +55,8 @@ export async function before(m, {conn, participants, groupMetadata}) {
 🌿 ¡Pero los recuerdos permanecerán para siempre! ✨
 💚 Nozomi te desea lo mejor en tu nueva aventura~ 🎀
 🌸 ¡Siempre tendrás un lugar en nuestros corazones! 🌸
+🎆Sigue nuestro canal🚂
+💙https://whatsapp.com/channel/0029VajYamSIHphMAl3ABi1o💙
 💚═══════◆【 🌟 】◆═══════💚`
     
     await conn.sendAi(m.chat, botname, textbot, kick, img, img, canal, estilo)
