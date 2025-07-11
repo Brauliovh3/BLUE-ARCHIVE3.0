@@ -31,23 +31,23 @@ const defaultMenu = {
 │✦ 𝗕𝗟𝗨𝗘 𝗔𝗥𝗖𝗛𝗜𝗩𝗘 𝗔𝗦𝗦𝗜𝗦𝗧𝗔𝗡𝗧 ✦ │
 ╰───────────────────────╯
 
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃¡Hola *%name*!Soy *TACHIBANA NOZOMI*🌸
 ┃  
 ┃💫Estudiante de Millennium Science School
 ┃🎯Especialista en información
 ┃✨%greeting
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
 ╔═════════════════════╗
 ║📊 ESTADO DEL SISTEMA  ║
 ╠════════════════════╣
-║ 🌐 Modo: Público                 ║
-║ ⚡ Baileys: Multi Device         ║
-║ ⏰ Tiempo Activo: %muptime       ║
-║ 👥 Usuarios Registrados: %totalreg ║
-║ 📅 Fecha: %date  ║
-║ 🕐 Hora: %time                   ║
+║ 🌐 Modo: Público   ║
+║ ⚡ Baileys: Multi Device  ║
+║ ⏰ Tiempo Activo: %muptime  ║
+║ 👥 Usuarios Registrados: %totalreg║
+║ 📅 Fecha: %date ║
+║ 🕐 Hora: %time    ║
 ╚════════════════════╝
 
 %readmore
@@ -64,8 +64,8 @@ const defaultMenu = {
   after: `
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃💙 Blue Archive - Millennium School ┃
-┃🌸 Tachibana Nozomi siempre lista   ┃
-┃✨ para ayudarte en tu aventura     ┃
+┃🌸 Tachibana Nozomi siempre lista┃
+┃✨ para ayudarte en tu aventura ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
 > 🎯 *¡Usa los comandos sabiamente, Sensei!*
