@@ -8,31 +8,31 @@ export async function before(m, {conn, participants, groupMetadata}) {
   let chat = global.db.data.chats[m.chat]
   
   if (chat.bienvenida && m.messageStubType == 27) {
-    let bienvenida = `💚═══════◆【 KIVOTOS 】◆═══════💚
+    let bienvenida = `💚═════◆【 KIVOTOS 】◆════💚
 🌸 ¡Un nuevo estudiante ha llegado! 🌸
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┏━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ 💚 Estudiante: @${m.messageStubParameters[0].split`@`[0]}
 ┃ 🏫 Escuela: ${groupMetadata.subject}
 ┃ 📚 Estado: ¡Matriculado exitosamente!
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+┗━━━━━━━━━━━━━━━━━━━━━━━━━┛
 🎀 ¡Bienvenido a nuestro club de actividades! 🎀
 💚 Nozomi espera que disfrutes tu tiempo aquí~ ✨
 🌿 ¡Que tengas una experiencia académica increíble! 🌿
 🎆Sigue nuestro canal🚂
 💙https://whatsapp.com/channel/0029VajYamSIHphMAl3ABi1o 
-💚═══════◆【 🎓 】◆═══════💚`
+💚═════◆【 🎓 】◆═════💚`
     
     await conn.sendAi(m.chat, botname, textbot, bienvenida, img, img, canal, estilo)
   }
   
   if (chat.bienvenida && m.messageStubType == 28) {
-    let bye = `💚═══════◆【 KIVOTOS 】◆═══════💚
+    let bye = `💚══════◆【 KIVOTOS 】◆══════💚
 🚫 ¡Acción disciplinaria ejecutada! 🚫
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┏━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ 💔 Estudiante: @${m.messageStubParameters[0].split`@`[0]}
 ┃ 📋 Motivo: Expulsión del grupo
 ┃ 🏫 Estado: Removido de la escuela
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+┗━━━━━━━━━━━━━━━━━━━━━━━━━┛
 😔 Las reglas escolares deben ser respetadas...
 💚 Esperamos que reflexiones sobre tus acciones 🌿
 🎓 La disciplina es parte del crecimiento estudiantil
@@ -44,20 +44,20 @@ export async function before(m, {conn, participants, groupMetadata}) {
   }
   
   if (chat.bienvenida && m.messageStubType == 32) {
-    let kick = `💚═══════◆【 KIVOTOS 】◆═══════💚
+    let kick = `💚══════◆【 KIVOTOS 】◆══════💚
 🌸 Un estudiante se ha graduado... 🌸
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┏━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ 💚 Estudiante: @${m.messageStubParameters[0].split`@`[0]}
 ┃ 🎓 Decisión: Transferencia voluntaria
 ┃ 💌 Estado: Siguiendo su propio camino
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+┗━━━━━━━━━━━━━━━━━━━━━━━━━┛
 😢 Los caminos estudiantiles a veces se separan...
 🌿 ¡Pero los recuerdos permanecerán para siempre! ✨
 💚 Nozomi te desea lo mejor en tu nueva aventura~ 🎀
 🌸 ¡Siempre tendrás un lugar en nuestros corazones! 🌸
 🎆Sigue nuestro canal🚂
 💙https://whatsapp.com/channel/0029VajYamSIHphMAl3ABi1o
-💚═══════◆【 🌟 】◆═══════💚`
+💚══════◆【 🌟 】◆══════💚`
     
     await conn.sendAi(m.chat, botname, textbot, kick, img, img, canal, estilo)
   }
