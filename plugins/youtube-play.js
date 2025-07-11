@@ -292,6 +292,41 @@ const downloadAndSend = async (conn, chatId, replyMsg, videoId, option, title) =
   }
 };
 
+
+const downloadAndSendBoth = async (conn, chatId, replyMsg, videoId, title) => {
+  try {
+    const videoUrl = `https://youtu.be/${videoId}`;
+
+    
+    await conn.reply(chatId, `💚 Descargando audio (MP3), por favor espera... 🌱⏳`, replyMsg);
+    const audioApi = await fetchAPI(videoUrl, 'audio');
+    const audioUrl = audioApi.download;
+    let audioSuccess = false;
+    if (audioUrl) {
+      audioSuccess = await sendAsAudio(conn, chatId, audioUrl, title, replyMsg);
+    } else {
+      await conn.reply(chatId, `💚 No se pudo descargar el audio. Intenta más tarde. 🌿`, replyMsg);
+    }
+
+    
+    await conn.reply(chatId, `💚 Descargando video (MP4), por favor espera... 🌱⏳`, replyMsg);
+    const videoApi = await fetchAPI(videoUrl, 'video');
+    const videoUrlFinal = videoApi.download;
+    let videoSuccess = false;
+    if (videoUrlFinal) {
+      videoSuccess = await sendAsVideo(conn, chatId, videoUrlFinal, title, replyMsg);
+    } else {
+      await conn.reply(chatId, `💚 No se pudo descargar el video. Intenta más tarde. 🌿`, replyMsg);
+    }
+
+    return audioSuccess && videoSuccess;
+  } catch (error) {
+    console.error('Error descargando audio/video:', error);
+    await conn.reply(chatId, `💚 Ocurrió un error al procesar tu solicitud. Intenta más tarde. 🌿`, replyMsg);
+    return false;
+  }
+};
+
 let handler = async (m, { conn, text }) => {
   if (!text) return conn.reply(m.chat, '💚 Ingresa el nombre de la canción o video que deseas buscar. 🎵🌿', m);
 
