@@ -93,11 +93,9 @@ export async function handler(chatUpdate) {
                     chat.antiLink2 = false
                 if (!('onlyLatinos' in chat))
                     chat.onlyLatinos = false
-                if (!('antiPeruanos' in chat))
-                    chat.antiPeruanos = false  
                 if (!('antiToxic' in chat))
                     chat.antiToxic = false
-                if (!('nsfw' in chat))
+                 if (!('nsfw' in chat))
                     chat.nsfw = false
                 if (!isNumber(chat.expired))
                     chat.expired = 0
@@ -108,7 +106,6 @@ export async function handler(chatUpdate) {
                     antiLink: false,
                     antiLink2: false,
                     onlyLatinos: false,
-                    antiPeruanos: false,  
                     antiToxic: false,
                     nsfw: false, 
                     expired: 0, 
@@ -302,7 +299,7 @@ export async function handler(chatUpdate) {
                 else
                     m.exp += xp
                 if (!isPrems && plugin.limit && global.db.data.users[m.sender].limit < plugin.limit * 1) {
-                    conn.reply(m.chat, `💚🌿 ¡Sensei! Se agotaron tus *🌱 Cebollines*. Como estratega del Club de Ingeniería, recomiendo conseguir más recursos antes de continuar.`, m)
+                    conn.reply(m.chat, `💚🌿 ¡Sensei! Se agotaron tus *💎 Piroxenos*. Como estratega del Club de Ingeniería, recomiendo conseguir más recursos antes de continuar.`, m, rcanal)
                     continue
                 }
                 let extra = {
@@ -350,7 +347,7 @@ export async function handler(chatUpdate) {
                         }
                     }
                     if (m.limit)
-                        conn.reply(m.chat, `💚🌿 Utilizaste *${+m.limit}* 🌱 Cebollines en esta operación, Sensei.`, m)
+                        conn.reply(m.chat, `💚🌿 Utilizaste *${+m.limit}* 💎 Piroxenos en esta operación, Sensei.`, m, rcanal)
                 }
                 break
             }
@@ -400,14 +397,14 @@ export async function handler(chatUpdate) {
         }
 
         try {
-            if (!opts['noprint']) await (await import(`./lib/print.js`)).default(m, this)
-        } catch (e) {
-            console.log(m, m.quoted, e)
-        }
-        const settingsREAD = global.db.data.settings[this.user.jid] || {}
-        if (opts['autoread']) await this.readMessages([m.key])
-        if (settingsREAD.autoread) await this.readMessages([m.key])
+      if (!opts['noprint']) await (await import(`./lib/print.js`)).default(m, this)
+    } catch (e) {
+      console.log(m, m.quoted, e)
     }
+    const settingsREAD = global.db.data.settings[this.user.jid] || {}
+    if (opts['autoread']) await this.readMessages([m.key])
+    if (settingsREAD.autoread) await this.readMessages([m.key])
+  }
 }
 
 global.dfail = (type, m, conn, usedPrefix) => {
@@ -420,10 +417,10 @@ global.dfail = (type, m, conn, usedPrefix) => {
         private: `💚🌿 ¡Sensei! Este comando solo puede ser utilizado en mi *CANAL PRIVADO DE COMUNICACIÓN*. Las operaciones grupales no están permitidas.`,
         admin: `💚🌿 ¡Sensei! Este comando solo puede ser utilizado por los *ADMINISTRADORES* de la unidad táctica. Se requieren permisos de liderazgo.`,
         botAdmin: `💚🌿 ¡Sensei! Como estratega del Club de Ingeniería, necesito ser *ADMINISTRADORA* de esta unidad táctica para ejecutar operaciones de gestión.`,
-        unreg: `💚🌿 ¡Sensei! Para usar este comando debes estar *REGISTRADO* en la base de datos del Club de Ingeniería.\n\n🌿 Para registrarte en el sistema, utiliza:\n*${usedPrefix || '.'}reg nombre.edad*\n\n📝 Ejemplo: *${usedPrefix || '.'}reg Nozomi.17*\n\n"La organización estratégica requiere identificación adecuada." - Nozomi 💚`,
+        unreg: `💚🌿 ¡Sensei! Para usar este comando debes estar *REGISTRADO* en la base de datos del Club de Ingeniería.\n\n🌿 Para registrarte en el sistema, utiliza:\n*${usedPrefix || '.'}reg nombre.edad*\n\n📝 Ejemplo: *${usedPrefix || '.'}reg Nozomi.17*\n\n"La organización estratégica requiere identificación adecuada atentamente." Tachibana-Nozomi 💚`,
         restrict: `💚🌿 ¡Sensei! Esta función está *DESHABILITADA* por protocolos de seguridad del Club de Ingeniería. Contacta con el administrador del sistema.`  
     }[type]
-    if (msg) return conn.reply(m.chat, msg, m).then(_ => m.react('💢'))
+    if (msg) return conn.reply(m.chat, msg, m, rcanal).then(_ => m.react('💢'))
 }
 
 let file = global.__filename(import.meta.url, true)
