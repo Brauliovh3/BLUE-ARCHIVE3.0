@@ -36,7 +36,29 @@ let handler = async (m, { conn }) => {
 
         exec('uptime -p', (error, stdout, stderr) => {
 
-          conn.reply(m.chat, `*💙 Velocidad* : ${latensi.toFixed(4)} _ms_\n*» Procesador* : ${procesador}\n*» CPU* : ${cpu} MHz\n*» RAM* : ${format(totalmem() - freemem())} / ${format(totalmem())}\n*» Tiempo de actividad* : ${muptime}`, m, rcanal)
+          conn.reply(m.chat, `
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃🌸                                     KIVOTOS ACADEMY                                              🌸┃
+┃💙                                   DIAGNÓSTICO DEL SISTEMA                                       💙┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+╔═══════════════════════════════════════╗
+║⚡       RENDIMIENTO DEL BOT     ⚡║
+╠═══════════════════════════════════════╣
+║🌸 Ping: ${latensi.toFixed(4)} ms                ║
+║🖥️ CPU: ${procesador}                            ║
+║💻 Freq: ${cpu} MHz                             ║
+║🧠 RAM: ${format(totalmem() - freemem())} / ${format(totalmem())}║
+║⏰ Uptime: ${muptime}                           ║
+║🤖 Sistema: Tachibana Nozomi Bot      ║
+║🏫 Academia: Millennium Science       ║
+╚═══════════════════════════════════════╝
+
+🌸 *Estado:* ✅ **OPERATIVO** | 💙 *Nozomi:* "¡Sistemas funcionando perfectamente, Sensei!"
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃🎯                            🌟 Ingeniería de Millennium en acción 🌟                             🎯┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛`, m, rcanal)
         })
       })
     })

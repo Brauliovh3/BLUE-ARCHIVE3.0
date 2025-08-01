@@ -19,13 +19,13 @@ global.prems = []
    
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
-global.packname = ``
-global.author = '{\n "bot": {\n   "name": "💚Hikari,Nozomi💚",\n     "author": "(ㅎㅊDEPOOLㅊㅎ)",\n   "status_bot": "active"\n }\n}'
-global.wait = '🐢 *Aɢᴜᴀʀᴅᴇ ᴜɴ ᴍᴏᴍᴇɴᴛᴏ, sᴏʏ ʟᴇɴᴛᴀ... ฅ^•ﻌ•^ฅ*'
-global.botname = 'Hikari,Nozomi'
-global.textbot = `Powered By BVH3 INDUSTRIES`
-global.listo = '*Aqui tiene ฅ^•ﻌ•^ฅ*'
-global.namechannel = '💙BLUE ARCHIVE CHANNEL💙'
+global.packname = `🌸💙 TACHIBANA NOZOMI 💙🌸`
+global.author = '{\n "bot": {\n   "name": "�🌸 Hikari & Nozomi 🌸�",\n     "author": "🎯(ㅎㅊDEPOOLㅊㅎ)🎯",\n     "school": "Millennium Science School",\n     "club": "Club de Ingeniería",\n   "status_bot": "✨ Completamente Operativo ✨"\n }\n}'
+global.wait = '🌸 *Procesando solicitud, Sensei... Por favor espera un momento* ✨\n💙 *Tachibana Nozomi trabajando en tu petición* 🎯'
+global.botname = '🌸💙 Tachibana Nozomi 💙🌸'
+global.textbot = `🎯 Powered By BVH3 INDUSTRIES | Millennium Science School 🎯`
+global.listo = '*🌸 ¡Aquí tienes, Sensei! ✨ Cortesía del Club de Ingeniería 💙*'
+global.namechannel = '💙🌸 BLUE ARCHIVE CHANNEL 🌸💙'
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 

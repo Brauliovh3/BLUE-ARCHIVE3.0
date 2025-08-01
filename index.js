@@ -11,15 +11,33 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const require = createRequire(__dirname)
 
 cfonts.say('BLUE\nARCHIVE', {
-  font: 'chrome',
+  font: 'block',
   align: 'center',
-  gradient: ['cyan', 'cyan']
+  gradient: ['#00D4FF', '#0099CC']
 })
 
-cfonts.say(`WhatsApp Bot Multi Device`, {
+cfonts.say('◆━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━◆', {
   font: 'console',
   align: 'center',
-  gradient: ['cyan', 'cyan']
+  colors: ['cyan']
+})
+
+cfonts.say('💙  TACHIBANA NOZOMI SYSTEM  💙', {
+  font: 'console',
+  align: 'center',
+  gradient: ['#FF69B4', '#00BFFF']
+})
+
+cfonts.say('WhatsApp Bot Multi Device | Kivotos Academy', {
+  font: 'console',
+  align: 'center',
+  gradient: ['cyan', 'magenta']
+})
+
+cfonts.say('◆━━━━━━━━━━━━━━━━━━━━━━━━━━━━◆', {
+  font: 'console',
+  align: 'center',
+  colors: ['cyan']
 })
 
 let isRunning = false

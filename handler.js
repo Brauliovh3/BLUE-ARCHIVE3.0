@@ -409,17 +409,136 @@ export async function handler(chatUpdate) {
 
 global.dfail = (type, m, conn, usedPrefix) => {
     let msg = {
-        rowner: `💚🌿 ¡Sensei! Este comando solo puede ser utilizado por el *COMANDANTE SUPREMO* del Club de Ingeniería.`,
-        owner: `💚🌿 ¡Sensei! Este comando solo puede ser utilizado por el *PRESIDENTE* del Club de Ingeniería y comandantes autorizados.`,
-        mods: `💚🌿 ¡Sensei! Este comando solo puede ser utilizado por los *MODERADORES ESTRATÉGICOS* del Club de Ingeniería.`,
-        premium: `💚🌿 ¡Sensei! Este comando requiere *MEMBRESÍA PREMIUM* del Club de Ingeniería para acceder a funciones avanzadas.`,
-        group: `💚🌿 ¡Sensei! Este comando solo puede ser utilizado en *UNIDADES TÁCTICAS* (grupos). Las operaciones individuales no están permitidas.`,
-        private: `💚🌿 ¡Sensei! Este comando solo puede ser utilizado en mi *CANAL PRIVADO DE COMUNICACIÓN*. Las operaciones grupales no están permitidas.`,
-        admin: `💚🌿 ¡Sensei! Este comando solo puede ser utilizado por los *ADMINISTRADORES* de la unidad táctica. Se requieren permisos de liderazgo.`,
-        botAdmin: `💚🌿 ¡Sensei! Como estratega del Club de Ingeniería, necesito ser *ADMINISTRADORA* de esta unidad táctica para ejecutar operaciones de gestión.`,
-        unreg: `💚🌿 ¡Sensei! Para usar este comando debes estar *REGISTRADO* en la base de datos del Club de Ingeniería.\n\n🌿 Para registrarte en el sistema, utiliza:\n*${usedPrefix || '.'}reg nombre.edad*\n\n📝 Ejemplo: *${usedPrefix || '.'}reg Nozomi.17*\n\n"La organización estratégica requiere identificación adecuada atentamente." Tachibana-Nozomi 💚`,
-        restrict: `💚🌿 ¡Sensei! Esta función está *DESHABILITADA* por protocolos de seguridad del Club de Ingeniería. Contacta con el administrador del sistema.`  
-    }[type]
+        rowner: `
+┏━━━━━━━━━━━━━━━━━━━━━━┓
+┃⚠️ ACCESO DENEGADO ⚠️┃
+┗━━━━━━━━━━━━━━━━━━━━━━┛
+
+� *Mensaje de Tachibana Nozomi:*
+"¡Sensei! Este comando solo puede ser utilizado por el *COMANDANTE SUPREMO* del Club de Ingeniería. Solo el desarrollador principal tiene acceso a funciones de nivel crítico."
+
+🎯 *Nivel de Acceso Requerido:* **COMANDANTE SUPREMO**
+🏫 *Academia:* Millennium Science School
+⚡ *Autorización:* **MÁXIMO NIVEL**`,
+
+        owner: `
+┏━━━━━━━━━━━━━━━━━━━━━━┓
+┃⚠️ ACCESO DENEGADO ⚠️┃
+┗━━━━━━━━━━━━━━━━━━━━━━┛
+
+� *Mensaje de Tachibana Nozomi:*
+"¡Sensei! Este comando solo puede ser utilizado por el *PRESIDENTE* del Club de Ingeniería y comandantes autorizados. Se requiere autorización administrativa de alto nivel."
+
+🎯 *Nivel de Acceso Requerido:* **PRESIDENTE/OWNER**
+🏫 *Academia:* Millennium Science School
+⚡ *Autorización:* **ALTO NIVEL**`,
+
+        mods: `
+┏━━━━━━━━━━━━━━━━━━━━━━┓
+┃⚠️ ACCESO DENEGADO ⚠️┃
+┗━━━━━━━━━━━━━━━━━━━━━━┛
+
+� *Mensaje de Tachibana Nozomi:*
+"¡Sensei! Este comando solo puede ser utilizado por los *MODERADORES ESTRATÉGICOS* del Club de Ingeniería. Se requiere autorización de moderación especializada."
+
+🎯 *Nivel de Acceso Requerido:* **MODERADOR**
+🏫 *Academia:* Millennium Science School
+⚡ *Autorización:* **NIVEL MEDIO**`,
+
+        premium: `
+┏━━━━━━━━━━━━━━━━━━━━━━━┓
+┃� MEMBRESÍA PREMIUM 💎┃
+┗━━━━━━━━━━━━━━━━━━━━━━━┛
+
+� *Mensaje de Tachibana Nozomi:*
+"¡Sensei! Este comando requiere *MEMBRESÍA PREMIUM* del Club de Ingeniería para acceder a funciones avanzadas y tecnología especializada."
+
+💎 *Beneficios Premium:*
+▸ Acceso a comandos exclusivos
+▸ Funciones avanzadas de ingeniería
+▸ Prioridad en el procesamiento
+▸ Soporte técnico especializado
+
+🎯 *¿Cómo obtener Premium?* Contacta al desarrollador principal`,
+
+        group: `
+┏━━━━━━━━━━━━━━━━━━┓
+┃🏫 SOLO GRUPOS 🏫┃
+┗━━━━━━━━━━━━━━━━━━┛
+
+� *Mensaje de Tachibana Nozomi:*
+"¡Sensei! Este comando solo puede ser utilizado en *UNIDADES TÁCTICAS* (grupos). Las operaciones de equipo requieren un entorno colaborativo adecuado."
+
+🎯 *Tipo de Chat Requerido:* **GRUPO**
+🏫 *Razón:* Función diseñada para interacción grupal
+⚡ *Solución:* Usa este comando en un grupo de WhatsApp`,
+
+        private: `
+┏━━━━━━━━━━━━━━━━━━━━━━┓
+┃� SOLO CHAT PRIVADO 💬┃
+┗━━━━━━━━━━━━━━━━━━━━━━┛
+
+� *Mensaje de Tachibana Nozomi:*
+"¡Sensei! Este comando solo puede ser utilizado en mi *CANAL PRIVADO DE COMUNICACIÓN*. Las operaciones confidenciales requieren privacidad total."
+
+🎯 *Tipo de Chat Requerido:* **PRIVADO**
+🏫 *Razón:* Función diseñada para uso personal
+⚡ *Solución:* Usa este comando en mi chat privado`,
+
+        admin: `
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃⚠️ SOLO ADMINISTRADORES ⚠️┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+� *Mensaje de Tachibana Nozomi:*
+"¡Sensei! Este comando solo puede ser utilizado por los *ADMINISTRADORES* de la unidad táctica. Se requieren permisos de liderazgo estudiantil para ejecutar esta función."
+
+🎯 *Nivel de Acceso Requerido:* **ADMINISTRADOR DEL GRUPO**
+🏫 *Razón:* Función de gestión administrativa
+⚡ *Solución:* Solicita permisos de admin al creador del grupo`,
+
+        botAdmin: `
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃🤖 BOT NECESITA SER ADMIN 🤖┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+� *Mensaje de Tachibana Nozomi:*
+"¡Sensei! Como estratega del Club de Ingeniería, necesito ser *ADMINISTRADORA* de esta unidad táctica para ejecutar operaciones de gestión grupal avanzada."
+
+🎯 *Requisito:* **BOT CON PERMISOS DE ADMIN**
+🏫 *Razón:* Función requiere permisos administrativos
+⚡ *Solución:* Haz que un admin me promocione a administradora`,
+
+        unreg: `
+┏━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃� REGISTRO REQUERIDO 📝┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+� *Mensaje de Tachibana Nozomi:*
+"¡Sensei! Para usar este comando debes estar *REGISTRADO* en la base de datos del Club de Ingeniería. La organización estratégica requiere identificación adecuada."
+
+╔═════════════════════════╗
+║📋 PROCESO DE REGISTRO 📋║
+╠═════════════════════════╣
+║🌸 Comando: ${usedPrefix || '.'}reg nombre.edad║
+║📝 Ejemplo: ${usedPrefix || '.'}reg Nozomi.17  ║
+║🎯 Propósito: Crear perfil estudiantil en Kivotos║
+║⭐ Beneficios: Acceso completo a funciones del bot║
+╚══════════════════════════╝
+
+💙 *¡Regístrate ahora y únete oficialmente a Millennium Science School!*`,
+        restrict: `
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃� FUNCIÓN DESHABILITADA 🚫┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+� *Mensaje de Tachibana Nozomi:*
+"¡Sensei! Esta función está *DESHABILITADA* por protocolos de seguridad del Club de Ingeniería. Por favor contacta con el administrador del sistema para más información."
+
+🎯 *Estado:* **TEMPORALMENTE INACTIVA**
+🏫 *Motivo:* Medidas de seguridad preventivas
+⚡ *Solución:* Contactar administrador principal`
+    }[type];
     if (msg) return conn.reply(m.chat, msg, m, rcanal).then(_ => m.react('💢'))
 }
 

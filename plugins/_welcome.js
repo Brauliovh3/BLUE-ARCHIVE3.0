@@ -44,20 +44,40 @@ export async function before(m, {conn, participants, groupMetadata}) {
   }
   
   if (chat.bienvenida && m.messageStubType == 32) {
-    let kick = `💚══════◆【 KIVOTOS 】◆══════💚
-🌸 Un estudiante se ha graduado... 🌸
-┏━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ 💚 Estudiante: @${m.messageStubParameters[0].split`@`[0]}
-┃ 🎓 Decisión: Transferencia voluntaria
-┃ 💌 Estado: Siguiendo su propio camino
-┗━━━━━━━━━━━━━━━━━━━━━━━━━┛
-😢 Los caminos estudiantiles a veces se separan...
-🌿 ¡Pero los recuerdos permanecerán para siempre! ✨
-💚 Nozomi te desea lo mejor en tu nueva aventura~ 🎀
-🌸 ¡Siempre tendrás un lugar en nuestros corazones! 🌸
-🎆Sigue nuestro canal🚂
-💙https://whatsapp.com/channel/0029VajYamSIHphMAl3ABi1o
-💚══════◆【 🌟 】◆══════💚`
+    let kick = `
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃🌸  KIVOTOS ACADEMY     🌸┃
+┃💫TRANSFERENCIA ESTUDIANTIL💫┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+🌸 *Un estudiante ha decidido seguir su propio camino...* 🌸
+
+╔════════════════════════════╗
+║🎓 REPORTE DE TRANSFERENCIA 🎓║
+╠════════════════════════════════╣
+║� Estudiante: @${m.messageStubParameters[0].split`@`[0]}║
+║� Escuela Origen: Millennium Science School║
+║🎯 Motivo: Transferencia Voluntaria║
+║� Fecha de Partida: ${new Date().toLocaleDateString('es-ES')}║
+║� Hora: ${new Date().toLocaleTimeString('es-ES', { hour12: false })}║
+║💫 Estado: Siguiendo nueva aventura║
+╚════════════════════════════════╝
+
+🌸 *Mensaje de despedida de Tachibana Nozomi:*
+💙 "Aunque es triste ver partir a un compañero, entiendo que cada estudiante debe seguir su propio camino. Como presidenta del Club de Ingeniería, quiero desearte lo mejor en tu nueva aventura. ¡Siempre serás bienvenido/a de vuelta a Kivotos!"
+
+💫 *RECUERDOS ETERNOS:*
+▸ Los momentos compartidos en la academia nunca se olvidan
+▸ Cada experiencia en Kivotos forma parte de tu crecimiento
+▸ Las amistades verdaderas trascienden las fronteras
+▸ ¡Te deseamos éxito en todos tus proyectos futuros!
+
+🌟 *Canal Oficial (siempre abierto para ti):*
+💙 https://whatsapp.com/channel/0029VajYamSIHphMAl3ABi1o
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃🌸 "¡Que tengas éxito en tu nuevo viaje académico!" �┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛`
     
     await conn.sendAi(m.chat, botname, textbot, kick, img, img, canal, estilo)
   }
